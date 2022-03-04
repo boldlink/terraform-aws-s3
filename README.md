@@ -1,7 +1,7 @@
 # AWS S3 Terraform module
 
 ## Description
-This terraform module creates a single S3 Bucket with the option of adding a s3 bucket policy or enable versioning (disabled by default).
+This terraform module creates a single S3 Bucket with the option of adding other s3 bucket configurations.
 
 Example available [here](https://github.com/boldlink/terraform-aws-ec2/tree/main/examples/main.tf)
 
@@ -16,13 +16,13 @@ Example available [here](https://github.com/boldlink/terraform-aws-ec2/tree/main
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.70.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.2.0 |
 
 ## Modules
 

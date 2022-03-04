@@ -283,7 +283,7 @@ variable "name" {
 
 variable "environment" {
   type        = string
-  description = "The environemnt this resource is belongs to"
+  description = "The environment this resource is belongs to"
   default     = null
 }
 
