@@ -3,7 +3,7 @@
 ## Description
 This terraform module creates a single S3 Bucket with the option of adding other s3 bucket configurations.
 
-Example available [here](https://github.com/boldlink/terraform-aws-ec2/tree/main/examples/main.tf)
+Example available [here](https://github.com/boldlink/terraform-aws-s3/tree/main/examples)
 
 ## Documentation
 
