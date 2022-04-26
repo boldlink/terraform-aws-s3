@@ -2,9 +2,8 @@ provider "aws" {
   region = "eu-west-1"
 }
 
-
 locals {
-  name            = "s3-bucket-${uuid()}"
+  name            = "s3-bucket"
   target_bucket   = "test-boldlink"
   allowed_origins = ["https://s3-website-test.boldlink.io"]
 }
@@ -18,13 +17,12 @@ data "aws_iam_policy_document" "s3_read_permissions" {
       type        = "*"
     }
     effect    = "Allow"
-    resources = ["arn:aws:s3:::${local.name}"]
+    resources = ["arn:aws:s3:::${var.bucket_name}"]
   }
 }
 
 module "private_s3_bucket" {
-  source = "./.."
-
+  source = "boldlink/s3/aws"
   name   = local.name
   cors_allowed_headers = ["*"]
   cors_allowed_methods = ["GET"]
