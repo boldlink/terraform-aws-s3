@@ -22,9 +22,8 @@ data "aws_iam_policy_document" "s3_read_permissions" {
 }
 
 module "private_s3_bucket" {
-  #source = "boldlink/s3/aws"
-  source = "../"
-  name   = local.name
+  source               = "boldlink/s3/aws"
+  name                 = local.name
   cors_allowed_headers = ["*"]
   cors_allowed_methods = ["GET"]
   cors_allowed_origins = local.allowed_origins
