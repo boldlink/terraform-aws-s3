@@ -4,7 +4,6 @@ provider "aws" {
 
 locals {
   name            = "s3-bucket-${uuid()}"
-  target_bucket   = "test-boldlink"
   allowed_origins = ["https://s3-website-test.boldlink.io"]
 }
 
