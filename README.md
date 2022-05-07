@@ -1,3 +1,6 @@
+
+[![Build Status](https://github.com/boldlink/terraform-aws-s3/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/boldlink/terraform-aws-s3/actions)
+
 # AWS S3 Terraform module
 
 ## Description
