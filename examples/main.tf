@@ -1,27 +1,10 @@
-provider "aws" {
-  region = "eu-west-1"
-}
-
 locals {
   name            = "s3-bucket-${uuid()}"
   allowed_origins = ["https://s3-website-test.boldlink.io"]
 }
 
-data "aws_iam_policy_document" "s3_read_permissions" {
-  statement {
-    sid     = "allow-read-only-access"
-    actions = ["s3:GetObject", "s3:ListBucket"]
-    principals {
-      identifiers = ["*"]
-      type        = "*"
-    }
-    effect    = "Allow"
-    resources = ["arn:aws:s3:::${local.name}"]
-  }
-}
-
 module "private_s3_bucket" {
-  source               = "boldlink/s3/aws"
+  source               = "./.."
   name                 = local.name
   cors_allowed_headers = ["*"]
   cors_allowed_methods = ["GET"]
@@ -68,10 +51,4 @@ EOF
   expiration_days                             = 90
   noncurrent_version_transition_storage_class = "GLACIER"
 
-}
-
-output "outputs" {
-  value = [
-    module.private_s3_bucket,
-  ]
 }
