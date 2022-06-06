@@ -1,7 +1,6 @@
 output "outputs" {
   value = [
-    module.private_s3_bucket,
+    module.complete,
   ]
-
   description = "Various output values for the example"
 }
