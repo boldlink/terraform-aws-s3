@@ -14,10 +14,9 @@ resource "aws_s3_bucket_policy" "main" {
 }
 
 resource "aws_s3_bucket_public_access_block" "main" {
-  count                   = length(var.public_access_block) > 0 ? 1 : 0
   bucket                  = aws_s3_bucket.main.bucket
-  block_public_acls       = try(var.public_access_block["block_public_acls"], null)
-  block_public_policy     = try(var.public_access_block["block_public_policy"], null)
-  ignore_public_acls      = try(var.public_access_block["ignore_public_acls"], null)
-  restrict_public_buckets = try(var.public_access_block["restrict_public_buckets"], null)
+  block_public_acls       = var.block_public_acls
+  block_public_policy     = var.block_public_policy
+  ignore_public_acls      = var.ignore_public_acls
+  restrict_public_buckets = var.restrict_public_buckets
 }

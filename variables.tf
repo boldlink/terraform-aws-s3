@@ -37,8 +37,26 @@ variable "bucket_policy" {
 }
 
 ## Public access block
-variable "public_access_block" {
-  type        = any
-  description = "Configuration setting for s3 bucket public access block"
-  default     = {}
+variable "block_public_acls" {
+  type        = bool
+  description = "(Optional) Whether Amazon S3 should block public ACLs for this bucket."
+  default     = true
+}
+
+variable "block_public_policy" {
+  type        = bool
+  description = "(Optional) Whether Amazon S3 should block public bucket policies for this bucket."
+  default     = true
+}
+
+variable "ignore_public_acls" {
+  type        = bool
+  description = "(Optional) Whether Amazon S3 should ignore public ACLs for this bucket."
+  default     = true
+}
+
+variable "restrict_public_buckets" {
+  type        = bool
+  description = "(Optional) Whether Amazon S3 should restrict public bucket policies for this bucket."
+  default     = true
 }
