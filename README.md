@@ -9,6 +9,25 @@ This terraform module creates an S3 Bucket with the options of adding other s3 b
 
 Examples available [here](https://github.com/boldlink/terraform-aws-s3/tree/main/examples)
 
+## Usage
+*NOTE*: These examples use the latest version of this module
+
+```hcl
+locals {
+  name = "minimum-example-bucket"
+}
+
+module "minimum" {
+  source = "../../"
+  bucket = local.name
+  tags = {
+    Name        = local.name
+    Environment = "Dev"
+  }
+}
+}
+```
+
 ## Documentation
 
 [AWS S3 Bucket documentation](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html)
