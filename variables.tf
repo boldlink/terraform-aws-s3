@@ -60,3 +60,10 @@ variable "restrict_public_buckets" {
   description = "(Optional) Whether Amazon S3 should restrict public bucket policies for this bucket."
   default     = true
 }
+
+### Versioning
+variable "versioning" {
+  type        = any
+  description = "A configuration of the S3 bucket versioning state."
+  default     = {}
+}

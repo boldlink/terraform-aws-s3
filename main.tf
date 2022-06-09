@@ -20,3 +20,13 @@ resource "aws_s3_bucket_public_access_block" "main" {
   ignore_public_acls      = var.ignore_public_acls
   restrict_public_buckets = var.restrict_public_buckets
 }
+
+resource "aws_s3_bucket_versioning" "main" {
+  count  = length(var.versioning) > 0 ? 1 : 0
+  bucket = aws_s3_bucket.main.bucket
+
+  versioning_configuration {
+    status     = try(var.versioning["status"], null)
+    mfa_delete = try(var.versioning["mfa_delete"], null)
+  }
+}
