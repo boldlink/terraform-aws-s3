@@ -6,7 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Acl
-
 - Acceleration Configuration
 - CORS Configuration
 - Lifecycle Configuration
@@ -37,6 +36,12 @@ The following features have now been added as stand-alone resources in this rele
 - Add: `versions.tf`, which is important for pre-commit checks
 - Add: `Makefile` for examples automation
 - Add: `.gitignore` file
+
+## [1.0.1] - 2022-04-29
+### Changes
+- Restructuring example
+
+[1.0.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/1.0.1
 
 ## [1.0.0] - 2022-03-04
 ### Description
