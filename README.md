@@ -46,7 +46,7 @@ module "minimum" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.17.1 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.18.0 |
 
 ## Modules
 
