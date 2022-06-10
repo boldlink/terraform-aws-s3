@@ -37,6 +37,8 @@ The following features have now been added as stand-alone resources in this rele
 - Add: `Makefile` for examples automation
 - Add: `.gitignore` file
 
+[2.0.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.0.0
+
 ## [1.0.1] - 2022-04-29
 ### Changes
 - Restructuring example
