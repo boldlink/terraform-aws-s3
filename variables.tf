@@ -17,12 +17,6 @@ variable "force_destroy" {
   default     = false
 }
 
-variable "object_lock_enabled" {
-  type        = bool
-  description = "(Optional, Default:false, Forces new resource) Indicates whether this bucket has an Object Lock configuration enabled. Valid values are `true` or `false`."
-  default     = false
-}
-
 variable "tags" {
   type        = map(string)
   description = "(Optional) A map of tags to assign to the bucket."

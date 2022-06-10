@@ -1,10 +1,9 @@
 #### S3 Module
 resource "aws_s3_bucket" "main" {
-  bucket              = var.bucket
-  bucket_prefix       = var.bucket_prefix
-  force_destroy       = var.force_destroy
-  object_lock_enabled = var.object_lock_enabled
-  tags                = var.tags
+  bucket        = var.bucket
+  bucket_prefix = var.bucket_prefix
+  force_destroy = var.force_destroy
+  tags          = var.tags
 }
 
 resource "aws_s3_bucket_policy" "main" {
@@ -22,11 +21,16 @@ resource "aws_s3_bucket_public_access_block" "main" {
 }
 
 resource "aws_s3_bucket_versioning" "main" {
-  count  = length(var.versioning) > 0 ? 1 : 0
-  bucket = aws_s3_bucket.main.bucket
+  count                 = length(var.versioning) > 0 ? 1 : 0
+  bucket                = aws_s3_bucket.main.bucket
+  expected_bucket_owner = try(var.versioning["expected_bucket_owner"], null)
+  mfa                   = try(var.versioning["mfa"], null)
 
-  versioning_configuration {
-    status     = try(var.versioning["status"], null)
-    mfa_delete = try(var.versioning["mfa_delete"], null)
+  dynamic "versioning_configuration" {
+    for_each = try([var.versioning["versioning_configuration"]], [])
+    content {
+      status     = versioning_configuration.value.status
+      mfa_delete = try(versioning_configuration.value.mfa_delete, null)
+    }
   }
 }
