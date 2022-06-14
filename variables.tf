@@ -23,6 +23,24 @@ variable "tags" {
   default     = {}
 }
 
+variable "cors_rule" {
+  type        = any
+  description = "A rule of Cross-Origin Resource Sharing."
+  default     = []
+}
+
+variable "bucket_acl" {
+  type        = any
+  description = "The canned ACL to apply."
+  default     = {}
+}
+
+variable "server_side_encryption" {
+  type        = any
+  description = "A configuration of server-side encryption configuration."
+  default     = {}
+}
+
 ### Bucket Policy
 variable "bucket_policy" {
   type        = string
