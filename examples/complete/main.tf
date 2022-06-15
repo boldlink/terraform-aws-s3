@@ -3,14 +3,6 @@ module "complete" {
   bucket        = local.name
   bucket_policy = data.aws_iam_policy_document.s3.json
 
-  versioning = {
-    expected_bucket_owner = data.aws_caller_identity.current.account_id
-    versioning_configuration = {
-      status     = "Enabled"
-      mfa_delete = "Disabled"
-    }
-  }
-
   cors_rule = [
     {
       allowed_headers = ["*"]
@@ -53,14 +45,11 @@ module "complete" {
   }
 
   server_side_encryption = {
-    rules = [
-      {
-        bucket_key_enabled = true
-        apply_server_side_encryption_by_default = {
-          sse_algorithm = "aws:kms"
-        }
+    rule = {
+      apply_server_side_encryption_by_default = {
+        sse_algorithm = "aws:kms"
       }
-    ]
+    }
   }
 
   tags = {

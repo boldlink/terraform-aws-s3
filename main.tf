@@ -21,17 +21,13 @@ resource "aws_s3_bucket_public_access_block" "main" {
 }
 
 resource "aws_s3_bucket_versioning" "main" {
-  count                 = length(var.versioning) > 0 ? 1 : 0
   bucket                = aws_s3_bucket.main.bucket
   expected_bucket_owner = try(var.versioning["expected_bucket_owner"], null)
   mfa                   = try(var.versioning["mfa"], null)
 
-  dynamic "versioning_configuration" {
-    for_each = try([var.versioning["versioning_configuration"]], [])
-    content {
-      status     = versioning_configuration.value.status
-      mfa_delete = try(versioning_configuration.value.mfa_delete, null)
-    }
+  versioning_configuration {
+    status     = lookup(try(var.versioning["versioning_configuration"], {}), "status", "Enabled")
+    mfa_delete = lookup(try(var.versioning["versioning_configuration"], {}), "mfa_delete", null)
   }
 }
 
@@ -92,21 +88,13 @@ resource "aws_s3_bucket_acl" "main" {
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "main" {
-  count                 = length(var.server_side_encryption) > 0 ? 1 : 0
   bucket                = aws_s3_bucket.main.bucket
   expected_bucket_owner = try(var.server_side_encryption["expected_bucket_owner"], null)
-
-  dynamic "rule" {
-    for_each = lookup(var.server_side_encryption, "rules", [])
-    content {
-      bucket_key_enabled = try(rule.value.bucket_key_enabled, null)
-      dynamic "apply_server_side_encryption_by_default" {
-        for_each = try([rule.value.apply_server_side_encryption_by_default], [])
-        content {
-          kms_master_key_id = try(apply_server_side_encryption_by_default.value.kms_master_key_id, null)
-          sse_algorithm     = apply_server_side_encryption_by_default.value.sse_algorithm
-        }
-      }
+  rule {
+    bucket_key_enabled = lookup(try(var.server_side_encryption["rule"], {}), "bucket_key_enabled", true)
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = lookup(try(try(var.server_side_encryption["rule"], {})["apply_server_side_encryption_by_default"], {}), "kms_master_key_id", null)
+      sse_algorithm     = lookup(try(try(var.server_side_encryption["rule"], {})["apply_server_side_encryption_by_default"], {}), "sse_algorithm", "AES256")
     }
   }
 }
