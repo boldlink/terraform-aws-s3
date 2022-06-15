@@ -5,9 +5,6 @@ evaluate-variables: true
 external-modules-download-path: .external_modules
 framework: all
 skip-check:
-### Although these features have been added as stand-alone resources, checkov still doesn't recognize the configuration. Some are in future releases
-#- CKV_AWS_21 #Ensure all data stored in the S3 bucket have versioning enabled
-#- CKV_AWS_145 #Ensure that S3 buckets are encrypted with KMS by default
-#- CKV_AWS_19 #Ensure all data stored in the S3 bucket is securely encrypted at rest
+### These checkov checks have been skipped because these features are in future releases
 - CKV_AWS_18 #Ensure the S3 bucket has access logging enabled
 - CKV_AWS_144 #Ensure that S3 bucket has cross-region replication enabled
