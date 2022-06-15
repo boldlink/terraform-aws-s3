@@ -79,33 +79,3 @@ variable "versioning" {
   description = "A configuration of the S3 bucket versioning state."
   default     = {}
 }
-
-variable "versioning_status" {
-  type        = string
-  description = "A configuration of the S3 bucket versioning state."
-  default     = "Enabled"
-}
-
-variable "versioning_mfa_delete" {
-  type        = string
-  description = "A configuration of the S3 bucket mfa delete state."
-  default     = null
-}
-
-variable "bucket_key_enabled" {
-  type        = bool
-  description = "Whether to enable bucket key"
-  default     = true
-}
-
-variable "kms_master_key_id" {
-  type        = string
-  description = "Provide KMS Key ID to use for encryption"
-  default     = null
-}
-
-variable "sse_algorithm" {
-  type        = string
-  description = "Enter sse algorithm"
-  default     = "AES256"
-}
