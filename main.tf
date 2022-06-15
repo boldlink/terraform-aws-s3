@@ -22,12 +22,12 @@ resource "aws_s3_bucket_public_access_block" "main" {
 
 resource "aws_s3_bucket_versioning" "main" {
   bucket                = aws_s3_bucket.main.bucket
-  expected_bucket_owner = try(var.versioning["expected_bucket_owner"], null)
-  mfa                   = try(var.versioning["mfa"], null)
+  expected_bucket_owner = var.expected_bucket_owner
+  mfa                   = var.versioning_mfa
 
   versioning_configuration {
-    status     = lookup(try(var.versioning["versioning_configuration"], {}), "status", "Enabled")
-    mfa_delete = lookup(try(var.versioning["versioning_configuration"], {}), "mfa_delete", null)
+    status     = var.versioning_status
+    mfa_delete = var.versioning_mfa_delete
   }
 }
 
@@ -52,7 +52,7 @@ resource "aws_s3_bucket_acl" "main" {
   count                 = length(var.bucket_acl) > 0 ? 1 : 0
   bucket                = aws_s3_bucket.main.bucket
   acl                   = try(var.bucket_acl["acl"], null)
-  expected_bucket_owner = try(var.bucket_acl["expected_bucket_owner"], null)
+  expected_bucket_owner = var.expected_bucket_owner
 
   dynamic "access_control_policy" {
     for_each = try([var.bucket_acl["access_control_policy"]], [])
@@ -89,12 +89,12 @@ resource "aws_s3_bucket_acl" "main" {
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "main" {
   bucket                = aws_s3_bucket.main.bucket
-  expected_bucket_owner = try(var.server_side_encryption["expected_bucket_owner"], null)
+  expected_bucket_owner = var.expected_bucket_owner
   rule {
-    bucket_key_enabled = lookup(try(var.server_side_encryption["rule"], {}), "bucket_key_enabled", true)
+    bucket_key_enabled = var.sse_bucket_key_enabled
     apply_server_side_encryption_by_default {
-      kms_master_key_id = lookup(try(try(var.server_side_encryption["rule"], {})["apply_server_side_encryption_by_default"], {}), "kms_master_key_id", null)
-      sse_algorithm     = lookup(try(try(var.server_side_encryption["rule"], {})["apply_server_side_encryption_by_default"], {}), "sse_algorithm", "AES256")
+      kms_master_key_id = var.sse_kms_master_key_arn
+      sse_algorithm     = var.sse_sse_algorithm
     }
   }
 }

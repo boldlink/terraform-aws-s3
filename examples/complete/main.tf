@@ -1,7 +1,20 @@
+module "kms_key" {
+  source           = "boldlink/kms/aws"
+  description      = "kms key for ${local.name}"
+  create_kms_alias = true
+  alias_name       = "alias/${local.name}-key-alias"
+
+  tags = {
+    environment = "dev"
+    name        = local.name
+  }
+}
+
 module "complete" {
-  source        = "../../"
-  bucket        = local.name
-  bucket_policy = data.aws_iam_policy_document.s3.json
+  source                 = "../../"
+  bucket                 = local.name
+  bucket_policy          = data.aws_iam_policy_document.s3.json
+  sse_kms_master_key_arn = module.kms_key.arn
 
   cors_rule = [
     {
@@ -41,14 +54,6 @@ module "complete" {
           permission = "READ_ACP"
         }
       ]
-    }
-  }
-
-  server_side_encryption = {
-    rule = {
-      apply_server_side_encryption_by_default = {
-        sse_algorithm = "aws:kms"
-      }
     }
   }
 

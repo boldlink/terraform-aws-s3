@@ -35,12 +35,6 @@ variable "bucket_acl" {
   default     = {}
 }
 
-variable "server_side_encryption" {
-  type        = any
-  description = "A configuration of server-side encryption configuration."
-  default     = {}
-}
-
 ### Bucket Policy
 variable "bucket_policy" {
   type        = string
@@ -73,9 +67,44 @@ variable "restrict_public_buckets" {
   default     = true
 }
 
-### Versioning
-variable "versioning" {
-  type        = any
-  description = "A configuration of the S3 bucket versioning state."
-  default     = {}
+variable "expected_bucket_owner" {
+  type        = string
+  description = "(Optional, Forces new resource) The account ID of the expected bucket owner."
+  default     = null
+}
+
+variable "versioning_mfa" {
+  type        = string
+  description = "The concatenation of the authentication device's serial number, a space, and the value that is displayed on your authentication device."
+  default     = null
+}
+
+variable "versioning_status" {
+  type        = string
+  description = "(Required) The versioning state of the bucket. Valid values: `Enabled`, `Suspended`, or `Disabled`. Disabled should only be used when creating or importing resources that correspond to unversioned S3 buckets."
+  default     = "Enabled"
+}
+
+variable "versioning_mfa_delete" {
+  type        = string
+  description = "(Optional) Specifies whether MFA delete is enabled in the bucket versioning configuration. Valid values: `Enabled` or `Disabled`."
+  default     = null
+}
+
+variable "sse_bucket_key_enabled" {
+  type        = bool
+  description = "(Optional) Whether or not to use Amazon S3 Bucket Keys for SSE-KMS."
+  default     = null
+}
+
+variable "sse_kms_master_key_arn" {
+  type        = string
+  description = "(Optional) The AWS KMS master key ARN used for the SSE-KMS encryption. This can only be used when you set the value of sse_algorithm as `aws:kms`. The default `aws/s3` AWS KMS master key is used if this element is absent while the `sse_algorithm` is `aws:kms`."
+  default     = null
+}
+
+variable "sse_sse_algorithm" {
+  type        = string
+  description = "(Required) The server-side encryption algorithm to use. Valid values are `AES256` and `aws:kms`"
+  default     = "aws:kms"
 }
