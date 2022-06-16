@@ -30,7 +30,7 @@ module "complete" {
     }
   ]
 
-  ## Bucket ACL
+  ## Bucket ACL: NOT RECOMMENDED by AWS, Use S3 Bucket policy instead
   bucket_acl = {
     access_control_policy = {
 
@@ -41,17 +41,17 @@ module "complete" {
       grants = [
         {
           grantee = {
-            id   = data.aws_canonical_user_id.current.id
-            type = "CanonicalUser"
+            type = "Group"
+            uri  = "http://acs.amazonaws.com/groups/s3/LogDelivery"
           }
-          permission = "READ"
+          permission = "READ_ACP"
         },
         {
           grantee = {
             type = "Group"
             uri  = "http://acs.amazonaws.com/groups/s3/LogDelivery"
           }
-          permission = "READ_ACP"
+          permission = "WRITE"
         }
       ]
     }

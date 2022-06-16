@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replication Configuration
 - Request Payment Configuration
 - Website Configuration
+- Fix: CKV_AWS_18 #Ensure the S3 bucket has access logging enabled
+- Fix: CKV_AWS_144 #Ensure that S3 bucket has cross-region replication enabled
 
 ## [2.1.0] - 2022-06-14
 ### Added Features
