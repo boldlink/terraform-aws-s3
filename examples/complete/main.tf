@@ -19,14 +19,21 @@ module "complete" {
   cors_rule = [
     {
       allowed_headers = ["*"]
-      allowed_methods = ["PUT", "POST"]
-      allowed_origins = ["https://boldlink.io"]
+      allowed_methods = [
+        "PUT",
+        "POST",
+        "GET",
+        "HEAD",
+        "DELETE"
+      ]
+      allowed_origins = [
+        "cdn.myapp.com",
+        "myapp.com",
+        "https://cdn.myapp.com",
+        "https://myapp.com"
+      ]
       expose_headers  = ["ETag"]
       max_age_seconds = 3000
-    },
-    {
-      allowed_methods = ["GET"]
-      allowed_origins = ["*"]
     }
   ]
 
