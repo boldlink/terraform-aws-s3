@@ -46,7 +46,7 @@ module "minimum" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.18.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.19.0 |
 
 ## Modules
 
@@ -57,8 +57,11 @@ No modules.
 | Name | Type |
 |------|------|
 | [aws_s3_bucket.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_acl.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl) | resource |
+| [aws_s3_bucket_cors_configuration.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_cors_configuration) | resource |
 | [aws_s3_bucket_policy.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_public_access_block.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
+| [aws_s3_bucket_server_side_encryption_configuration.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
 | [aws_s3_bucket_versioning.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning) | resource |
 
 ## Inputs
@@ -68,13 +71,21 @@ No modules.
 | <a name="input_block_public_acls"></a> [block\_public\_acls](#input\_block\_public\_acls) | (Optional) Whether Amazon S3 should block public ACLs for this bucket. | `bool` | `true` | no |
 | <a name="input_block_public_policy"></a> [block\_public\_policy](#input\_block\_public\_policy) | (Optional) Whether Amazon S3 should block public bucket policies for this bucket. | `bool` | `true` | no |
 | <a name="input_bucket"></a> [bucket](#input\_bucket) | (Optional, Forces new resource) The name of the bucket. If omitted, Terraform will assign a random, unique name. Must be lowercase and less than or equal to 63 characters in length. | `string` | `null` | no |
+| <a name="input_bucket_acl"></a> [bucket\_acl](#input\_bucket\_acl) | The canned ACL to apply. | `any` | `{}` | no |
 | <a name="input_bucket_policy"></a> [bucket\_policy](#input\_bucket\_policy) | Attaches a policy to an S3 bucket resource. | `string` | `null` | no |
 | <a name="input_bucket_prefix"></a> [bucket\_prefix](#input\_bucket\_prefix) | Optional, Forces new resource) Creates a unique bucket name beginning with the specified prefix. Conflicts with bucket. Must be lowercase and less than or equal to 37 characters in length. | `string` | `null` | no |
+| <a name="input_cors_rule"></a> [cors\_rule](#input\_cors\_rule) | A rule of Cross-Origin Resource Sharing. | `any` | `[]` | no |
+| <a name="input_expected_bucket_owner"></a> [expected\_bucket\_owner](#input\_expected\_bucket\_owner) | (Optional, Forces new resource) The account ID of the expected bucket owner. | `string` | `null` | no |
 | <a name="input_force_destroy"></a> [force\_destroy](#input\_force\_destroy) | (Optional, Default:false) A boolean that indicates all objects (including any locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable. | `bool` | `false` | no |
 | <a name="input_ignore_public_acls"></a> [ignore\_public\_acls](#input\_ignore\_public\_acls) | (Optional) Whether Amazon S3 should ignore public ACLs for this bucket. | `bool` | `true` | no |
 | <a name="input_restrict_public_buckets"></a> [restrict\_public\_buckets](#input\_restrict\_public\_buckets) | (Optional) Whether Amazon S3 should restrict public bucket policies for this bucket. | `bool` | `true` | no |
+| <a name="input_sse_bucket_key_enabled"></a> [sse\_bucket\_key\_enabled](#input\_sse\_bucket\_key\_enabled) | (Optional) Whether or not to use Amazon S3 Bucket Keys for SSE-KMS. | `bool` | `null` | no |
+| <a name="input_sse_kms_master_key_arn"></a> [sse\_kms\_master\_key\_arn](#input\_sse\_kms\_master\_key\_arn) | (Optional) The AWS KMS master key ARN used for the SSE-KMS encryption. This can only be used when you set the value of sse\_algorithm as `aws:kms`. The default `aws/s3` AWS KMS master key is used if this element is absent while the `sse_algorithm` is `aws:kms`. | `string` | `null` | no |
+| <a name="input_sse_sse_algorithm"></a> [sse\_sse\_algorithm](#input\_sse\_sse\_algorithm) | (Required) The server-side encryption algorithm to use. Valid values are `AES256` and `aws:kms` | `string` | `"aws:kms"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | (Optional) A map of tags to assign to the bucket. | `map(string)` | `{}` | no |
-| <a name="input_versioning"></a> [versioning](#input\_versioning) | A configuration of the S3 bucket versioning state. | `any` | `{}` | no |
+| <a name="input_versioning_mfa"></a> [versioning\_mfa](#input\_versioning\_mfa) | The concatenation of the authentication device's serial number, a space, and the value that is displayed on your authentication device. | `string` | `null` | no |
+| <a name="input_versioning_mfa_delete"></a> [versioning\_mfa\_delete](#input\_versioning\_mfa\_delete) | (Optional) Specifies whether MFA delete is enabled in the bucket versioning configuration. Valid values: `Enabled` or `Disabled`. | `string` | `null` | no |
+| <a name="input_versioning_status"></a> [versioning\_status](#input\_versioning\_status) | (Required) The versioning state of the bucket. Valid values: `Enabled`, `Suspended`, or `Disabled`. Disabled should only be used when creating or importing resources that correspond to unversioned S3 buckets. | `string` | `"Enabled"` | no |
 
 ## Outputs
 

@@ -2,6 +2,8 @@ data "aws_caller_identity" "current" {}
 
 data "aws_partition" "current" {}
 
+data "aws_canonical_user_id" "current" {}
+
 ### Bucket Policy
 data "aws_iam_policy_document" "s3" {
   version = "2012-10-17"
