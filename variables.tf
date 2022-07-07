@@ -108,3 +108,9 @@ variable "sse_sse_algorithm" {
   description = "(Required) The server-side encryption algorithm to use. Valid values are `AES256` and `aws:kms`"
   default     = "aws:kms"
 }
+
+variable "s3_logging" {
+  description = "A map of configurations where to store logs"
+  type        = map(any)
+  default     = {}
+}

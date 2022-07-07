@@ -16,6 +16,11 @@ module "complete" {
   bucket_policy          = data.aws_iam_policy_document.s3.json
   sse_kms_master_key_arn = module.kms_key.arn
 
+  s3_logging = {
+    target_bucket = module.s3_logging.id
+    target_prefix = "/logs"
+  }
+
   cors_rule = [
     {
       allowed_headers = ["*"]
@@ -68,4 +73,10 @@ module "complete" {
     Name        = local.name
     Environment = "Dev"
   }
+}
+
+module "s3_logging" {
+  source        = "./../../"
+  bucket        = "example-logging-bucket"
+  force_destroy = true
 }
