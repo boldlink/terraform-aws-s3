@@ -15,6 +15,7 @@ module "complete" {
   bucket                 = local.name
   bucket_policy          = data.aws_iam_policy_document.s3.json
   sse_kms_master_key_arn = module.kms_key.arn
+  force_destroy          = true
 
   s3_logging = {
     target_bucket = module.s3_logging.id
