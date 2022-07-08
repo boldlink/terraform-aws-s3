@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix: CKV_AWS_144 #Ensure that S3 bucket has cross-region replication enabled
 
 ## [2.1.1] - 2022-07-07
-### Added Features
+### Description
 - Feature: S3 bucket logging
 
 [2.1.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.1.1
