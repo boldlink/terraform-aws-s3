@@ -105,5 +105,5 @@ resource "aws_s3_bucket_logging" "main" {
   bucket                = aws_s3_bucket.main.id
   target_bucket         = var.s3_logging["target_bucket"]
   target_prefix         = var.s3_logging["target_prefix"]
-  expected_bucket_owner = var.s3_logging["expected_bucket_owner"]
+  expected_bucket_owner = try(var.s3_logging["expected_bucket_owner"], null)
 }
