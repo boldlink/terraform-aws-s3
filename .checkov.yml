@@ -6,5 +6,4 @@ external-modules-download-path: .external_modules
 framework: all
 skip-check:
 ### These checkov checks have been skipped because these features are in future releases
-- CKV_AWS_18 #Ensure the S3 bucket has access logging enabled
 - CKV_AWS_144 #Ensure that S3 bucket has cross-region replication enabled

@@ -98,3 +98,12 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "main" {
     }
   }
 }
+
+
+resource "aws_s3_bucket_logging" "main" {
+  count                 = length(var.s3_logging) > 0 ? 1 : 0
+  bucket                = aws_s3_bucket.main.id
+  target_bucket         = var.s3_logging["target_bucket"]
+  target_prefix         = var.s3_logging["target_prefix"]
+  expected_bucket_owner = try(var.s3_logging["expected_bucket_owner"], null)
+}

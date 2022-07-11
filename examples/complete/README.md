@@ -17,7 +17,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.19.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.22.0 |
 
 ## Modules
 
@@ -25,6 +25,7 @@
 |------|--------|---------|
 | <a name="module_complete"></a> [complete](#module\_complete) | ../../ | n/a |
 | <a name="module_kms_key"></a> [kms\_key](#module\_kms\_key) | boldlink/kms/aws | n/a |
+| <a name="module_s3_logging"></a> [s3\_logging](#module\_s3\_logging) | ./../../ | n/a |
 
 ## Resources
 

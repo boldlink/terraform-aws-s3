@@ -12,8 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replication Configuration
 - Request Payment Configuration
 - Website Configuration
-- Fix: CKV_AWS_18 #Ensure the S3 bucket has access logging enabled
 - Fix: CKV_AWS_144 #Ensure that S3 bucket has cross-region replication enabled
+
+## [2.1.1] - 2022-07-07
+### Description
+- Feature: S3 bucket logging
+
+[2.1.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.1.1
 
 ## [2.1.0] - 2022-06-14
 ### Added Features
@@ -25,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - 2022-06-06
 ### Description
-This release is intented to use the new AWS provider version (v4 or above) which has breaking changes from the previous version (version 3).
+This release is intended to use the new AWS provider version (v4 or above) which has breaking changes from the previous version (version 3).
 Since AWS provider version 4, S3 uses stand-alone resources to configure many of the options and this is triggering a refactor of all the module. Release 2.0.0 will have less features/configurations than the previous version which are programmed to be gradually added in new releases.
 
 ### Changes/Refactor
@@ -57,5 +62,6 @@ The following features have now been added as stand-alone resources in this rele
 - Initial commit
 - Included most basic/common settings in module
 
-
 [1.0.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/1.0.0
+
+[Unreleased]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.1.1...HEAD
