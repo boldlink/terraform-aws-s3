@@ -49,7 +49,7 @@ resource "aws_s3_bucket_cors_configuration" "main" {
 }
 
 resource "aws_s3_bucket_acl" "main" {
-  count                 = length(var.bucket_acl) > 0 ? 1 : 0
+  count                 = length(keys(var.bucket_acl)) > 0 ? 1 : 0
   bucket                = aws_s3_bucket.main.bucket
   acl                   = try(var.bucket_acl["acl"], null)
   expected_bucket_owner = var.expected_bucket_owner
@@ -99,11 +99,139 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "main" {
   }
 }
 
-
 resource "aws_s3_bucket_logging" "main" {
   count                 = length(var.s3_logging) > 0 ? 1 : 0
   bucket                = aws_s3_bucket.main.id
   target_bucket         = var.s3_logging["target_bucket"]
   target_prefix         = var.s3_logging["target_prefix"]
   expected_bucket_owner = try(var.s3_logging["expected_bucket_owner"], null)
+}
+
+### S3 Buckets only support a single replication configuration
+resource "aws_s3_bucket_replication_configuration" "main" {
+  count  = length(keys(var.replication_configuration)) > 0 ? 1 : 0
+  bucket = aws_s3_bucket.main.id
+  token  = try(var.replication_configuration["token"], null)
+  role   = try(var.replication_configuration["role"], null)
+
+  dynamic "rule" {
+    for_each = try([var.replication_configuration["rule"]], [])
+    content {
+
+      id       = try(rule.value.id, null)
+      prefix   = try(rule.value.prefix, null)
+      priority = try(rule.value.priority, null)
+
+      status = try(rule.value.status, null)
+
+      dynamic "delete_marker_replication" {
+        for_each = try([rule.value.delete_marker_replication], [])
+        content {
+          status = delete_marker_replication.value.status
+        }
+      }
+
+      dynamic "destination" {
+        for_each = try([rule.value.destination], [])
+        content {
+          account       = try(destination.value.account, null)
+          bucket        = destination.value.bucket
+          storage_class = try(destination.value.storage_class, null)
+
+          dynamic "access_control_translation" {
+            for_each = try([destination.value.access_control_translation], [])
+            content {
+              owner = access_control_translation.value.owner
+            }
+          }
+
+          dynamic "encryption_configuration" {
+            for_each = try([destination.value.encryption_configuration], [])
+            content {
+              replica_kms_key_id = encryption_configuration.value.replica_kms_key_id
+            }
+          }
+
+          dynamic "metrics" {
+            for_each = try([destination.value.metrics], [])
+            content {
+              status = metrics.value.status
+              dynamic "event_threshold" {
+                for_each = try([metrics.value.event_threshold], [])
+                content {
+                  minutes = event_threshold.value.minutes
+                }
+              }
+            }
+          }
+
+          dynamic "replication_time" {
+            for_each = try([destination.value.replication_time], [])
+            content {
+              status = replication_time.value.status
+              dynamic "time" {
+                for_each = try([replication_time.value.time], [])
+                content {
+                  minutes = time.value.minutes
+                }
+              }
+            }
+          }
+        }
+      }
+
+      dynamic "filter" {
+        for_each = try([rule.value.filter], [])
+        content {
+
+          prefix = try(filter.value.prefix)
+
+          dynamic "and" {
+            for_each = try([filter.value.and], [])
+            content {
+              prefix = try(and.value.prefix, null)
+              tags   = lookup(and.value, "tags", {})
+            }
+          }
+
+          dynamic "tag" {
+            for_each = lookup(filter.value, "tag", [])
+            content {
+              key   = tag.value.key
+              value = tag.value.value
+            }
+          }
+        }
+      }
+
+      dynamic "source_selection_criteria" {
+        for_each = try([rule.value.source_selection_criteria], [])
+        content {
+          dynamic "replica_modifications" {
+            for_each = try([source_selection_criteria.value.replica_modifications], [])
+            content {
+              status = replica_modifications.value.status
+            }
+          }
+
+          dynamic "sse_kms_encrypted_objects" {
+            for_each = try([source_selection_criteria.value.replica_modifications], [])
+            content {
+              status = try(sse_kms_encrypted_objects.value.status, null)
+            }
+          }
+        }
+      }
+
+      dynamic "existing_object_replication" {
+        for_each = try([rule.value.existing_object_replication], [])
+        content {
+          status = existing_object_replication.value.status
+        }
+      }
+    }
+  }
+
+  # Must have bucket versioning enabled first
+  depends_on = [aws_s3_bucket_versioning.main]
 }

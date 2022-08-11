@@ -29,6 +29,12 @@ variable "cors_rule" {
   default     = []
 }
 
+variable "replication_configuration" {
+  type        = any
+  description = "Provides an independent configuration resource for S3 bucket replication configuration."
+  default     = {}
+}
+
 variable "bucket_acl" {
   type        = any
   description = "The canned ACL to apply."

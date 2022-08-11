@@ -5,20 +5,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Acceleration Configuration
-- Lifecycle Configuration
-- Bucket Logging Configuration
-- Object Lock Configuration
-- Replication Configuration
-- Request Payment Configuration
-- Website Configuration
+- feat: Acceleration Configuration
+- feat: Lifecycle Configuration
+- feat: Object Lock Configuration
+- feat: Replication Configuration
+- feat: Request Payment Configuration
+- feat: Website Configuration
+- feat: Analytics configuration
+- feat: Intelligent Tiering Configuration
+- feat: Bucket Inventory
+- feat: Bucket Metric
+- feat: Bucket Notification
+- feat: S3 Object Copy
+- feat: S3 Object
+
+## [2.2.0] - 2022-08-11
+### Added Features
+- feat: Replication Configuration
 - Fix: CKV_AWS_144 #Ensure that S3 bucket has cross-region replication enabled
 
 ## [2.1.1] - 2022-07-07
 ### Description
 - Feature: S3 bucket logging
-
-[2.1.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.1.1
 
 ## [2.1.0] - 2022-06-14
 ### Added Features
@@ -26,11 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Server Side Encryption Configuration
 - Bucket Acl
 
-[2.1.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.1.0
-
 ## [2.0.0] - 2022-06-06
 ### Description
-This release is intended to use the new AWS provider version (v4 or above) which has breaking changes from the previous version (version 3).
+This release is intented to use the new AWS provider version (v4 or above) which has breaking changes from the previous version (version 3).
 Since AWS provider version 4, S3 uses stand-alone resources to configure many of the options and this is triggering a refactor of all the module. Release 2.0.0 will have less features/configurations than the previous version which are programmed to be gradually added in new releases.
 
 ### Changes/Refactor
@@ -49,19 +55,19 @@ The following features have now been added as stand-alone resources in this rele
 - Add: `Makefile` for examples automation
 - Add: `.gitignore` file
 
-[2.0.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.0.0
-
 ## [1.0.1] - 2022-04-29
 ### Changes
 - Restructuring example
-
-[1.0.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/1.0.1
 
 ## [1.0.0] - 2022-03-04
 ### Description
 - Initial commit
 - Included most basic/common settings in module
 
+[Unreleased]: https://github.com/boldlink/terraform-aws-s3/compare/2.2.0...HEAD
+[2.2.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.2.0
+[2.1.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.1.1
+[2.1.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.1.0
+[2.0.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.0.0
+[1.0.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/1.0.1
 [1.0.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/1.0.0
-
-[Unreleased]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.1.1...HEAD

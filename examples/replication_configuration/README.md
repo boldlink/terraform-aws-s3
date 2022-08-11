@@ -2,7 +2,7 @@
 
 [<img src="https://avatars.githubusercontent.com/u/25388280?s=200&v=4" width="96"/>](https://boldlink.io)
 
-# Terraform module example of the complete configuration
+# Terraform module example showing replication configuration usage
 
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
@@ -23,16 +23,17 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_complete"></a> [complete](#module\_complete) | ../../ | n/a |
+| <a name="module_destination_bucket"></a> [destination\_bucket](#module\_destination\_bucket) | ../../ | n/a |
 | <a name="module_kms_key"></a> [kms\_key](#module\_kms\_key) | boldlink/kms/aws | n/a |
-| <a name="module_s3_logging"></a> [s3\_logging](#module\_s3\_logging) | ./../../ | n/a |
+| <a name="module_replication_example"></a> [replication\_example](#module\_replication\_example) | ../../ | n/a |
+| <a name="module_replication_role"></a> [replication\_role](#module\_replication\_role) | boldlink/iam-role/aws | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
-| [aws_canonical_user_id.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/canonical_user_id) | data source |
+| [aws_iam_policy_document.destination](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.s3](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 
