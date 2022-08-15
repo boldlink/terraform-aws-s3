@@ -1,11 +1,9 @@
 locals {
-  name               = "replication-example-boldlink-bucket"
-  account_id         = data.aws_caller_identity.current.account_id
-  partition          = data.aws_partition.current.partition
-  destination_bucket = "boldlink-logs-bucket"
+  source_bucket      = "boldlink-replication-src-bucket"
+  destination_bucket = "boldlink-replication-dest-bucket"
 
   tags = {
-    name        = local.name
+    name        = local.source_bucket
     environment = "examples"
   }
 
@@ -18,7 +16,7 @@ locals {
           "Service" : "s3.amazonaws.com"
         },
         "Effect" : "Allow",
-        "Sid" : "AllowAssumeRoleViaS3"
+        "Sid" : "AllowS3AssumeRole"
       }
     ]
   })
@@ -28,31 +26,49 @@ locals {
     "Statement" : [
       {
         "Action" : [
+          "s3:ListBucket",
           "s3:GetReplicationConfiguration",
-          "s3:ListBucket"
-        ],
-        "Effect" : "Allow",
-        "Resource" : [module.replication_example.arn]
-      },
-      {
-        "Action" : [
           "s3:GetObjectVersionForReplication",
           "s3:GetObjectVersionAcl",
-          "s3:GetObjectVersionTagging"
+          "s3:GetObjectVersionTagging",
+          "s3:GetObjectVersion",
+          "s3:ObjectOwnerOverrideToBucketOwner"
         ],
         "Effect" : "Allow",
         "Resource" : [
-          "${module.replication_example.arn}/*"
+          module.destination_bucket.arn,
+          "${module.destination_bucket.arn}/*",
+          module.source_bucket.arn,
+          "${module.source_bucket.arn}/*"
         ]
       },
       {
         "Action" : [
           "s3:ReplicateObject",
           "s3:ReplicateDelete",
-          "s3:ReplicateTags"
+          "s3:ReplicateTags",
+          "s3:GetObjectVersionTagging",
+          "s3:ObjectOwnerOverrideToBucketOwner"
         ],
         "Effect" : "Allow",
-        "Resource" : "arn:aws:s3:::${local.destination_bucket}/*"
+        "Resource" : [
+          "${module.destination_bucket.arn}/*",
+          "${module.source_bucket.arn}/*"
+        ]
+      },
+      {
+        "Action" : [
+          "kms:Decrypt"
+        ],
+        "Effect" : "Allow",
+        "Resource" : module.kms_key.arn
+      },
+      {
+        "Action" : [
+          "kms:Encrypt"
+        ],
+        "Effect" : "Allow",
+        "Resource" : module.kms_key.arn
       }
     ]
   })

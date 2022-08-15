@@ -1,11 +1,11 @@
 module "replication_role" {
   source                = "boldlink/iam-role/aws"
-  name                  = local.name
-  assume_role_policy    = local.assume_role_policy
+  name                  = local.source_bucket
   description           = "S3 replication role"
+  assume_role_policy    = local.assume_role_policy
   force_detach_policies = true
   policies = {
-    "${local.name}-policy" = {
+    "${local.source_bucket}-policy" = {
       policy = local.role_policy
     }
   }
@@ -13,52 +13,96 @@ module "replication_role" {
 
 module "kms_key" {
   source           = "boldlink/kms/aws"
-  description      = "kms key for ${local.name}"
+  description      = "kms key for ${local.source_bucket}"
   create_kms_alias = true
-  alias_name       = "alias/${local.name}-key-alias"
+  alias_name       = "alias/${local.source_bucket}-key-alias"
   tags             = local.tags
+}
+
+module "source_bucket" {
+  source                 = "../../"
+  bucket                 = local.source_bucket
+  sse_kms_master_key_arn = module.kms_key.arn
+  force_destroy          = true
+
+  replication_configuration = {
+    role = module.replication_role.arn
+
+    rules = [
+      {
+        id     = "everything"
+        status = "Enabled"
+
+        delete_marker_replication = {
+          status = "Enabled"
+        }
+
+        destination = {
+          bucket        = module.destination_bucket.arn
+          storage_class = "STANDARD"
+
+          encryption_configuration = {
+            replica_kms_key_id = module.kms_key.arn
+          }
+        }
+
+        source_selection_criteria = {
+          replica_modifications = {
+            status = "Enabled"
+          }
+
+          sse_kms_encrypted_objects = {
+            status = "Enabled"
+          }
+        }
+      },
+      {
+        id       = "log-filter"
+        status   = "Enabled"
+        priority = 5
+
+        filter = {
+          prefix = "log"
+
+          tag = {
+            key   = "environment"
+            value = "examples"
+          }
+        }
+
+        delete_marker_replication = {
+          status = "Disabled"
+        }
+
+        destination = {
+          bucket        = module.destination_bucket.arn
+          storage_class = "STANDARD"
+
+          encryption_configuration = {
+            replica_kms_key_id = module.kms_key.arn
+          }
+        }
+
+        source_selection_criteria = {
+          sse_kms_encrypted_objects = {
+            status = "Enabled"
+          }
+        }
+      }
+    ]
+  }
+
+  tags = local.tags
 }
 
 module "destination_bucket" {
   source                 = "../../"
   bucket                 = local.destination_bucket
-  bucket_policy          = data.aws_iam_policy_document.destination.json
   sse_kms_master_key_arn = module.kms_key.arn
   force_destroy          = true
+
   tags = {
     environment = "examples"
-    name        = "destination-${local.name}"
-  }
-}
-
-module "replication_example" {
-  source                 = "../../"
-  bucket                 = local.name
-  bucket_policy          = data.aws_iam_policy_document.s3.json
-  sse_kms_master_key_arn = module.kms_key.arn
-  force_destroy          = true
-  tags                   = local.tags
-
-  replication_configuration = {
-    role = module.replication_role.arn
-    rule = {
-      id = "boldlink"
-
-      filter = {
-        prefix = "bold"
-      }
-
-      status = "Enabled"
-
-      delete_marker_replication = {
-        status = "Enabled"
-      }
-
-      destination = {
-        account       = local.account_id
-        bucket        = "arn:aws:s3:::${local.destination_bucket}"
-        storage_class = "STANDARD"
-      }
-    }
+    name        = local.destination_bucket
   }
 }
