@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - feat: Acceleration Configuration
 - feat: Lifecycle Configuration
 - feat: Object Lock Configuration
-- feat: Replication Configuration
 - feat: Request Payment Configuration
 - feat: Website Configuration
 - feat: Analytics configuration
