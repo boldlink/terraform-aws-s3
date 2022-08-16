@@ -1,6 +1,6 @@
 locals {
-  source_bucket      = "boldlink-replication-src-bucket"
-  destination_bucket = "boldlink-replication-dest-bucket"
+  source_bucket      = "boldlink-replication-example-src-bucket"
+  destination_bucket = "boldlink-replication-example-dest-bucket"
 
   tags = {
     name        = local.source_bucket
@@ -58,17 +58,14 @@ locals {
       },
       {
         "Action" : [
-          "kms:Decrypt"
-        ],
-        "Effect" : "Allow",
-        "Resource" : module.kms_key.arn
-      },
-      {
-        "Action" : [
+          "kms:Decrypt",
           "kms:Encrypt"
         ],
         "Effect" : "Allow",
-        "Resource" : module.kms_key.arn
+        "Resource" : [
+          module.source_kms_key.arn,
+          module.destination_kms_key.arn
+        ]
       }
     ]
   })

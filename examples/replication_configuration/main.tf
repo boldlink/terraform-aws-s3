@@ -1,3 +1,12 @@
+provider "aws" {
+  region = "eu-west-1"
+}
+
+provider "aws" {
+  alias  = "dest"
+  region = "eu-central-1"
+}
+
 module "replication_role" {
   source                = "boldlink/iam-role/aws"
   name                  = local.source_bucket
@@ -11,7 +20,7 @@ module "replication_role" {
   }
 }
 
-module "kms_key" {
+module "source_kms_key" {
   source           = "boldlink/kms/aws"
   description      = "kms key for ${local.source_bucket}"
   create_kms_alias = true
@@ -19,10 +28,22 @@ module "kms_key" {
   tags             = local.tags
 }
 
+module "destination_kms_key" {
+  source           = "boldlink/kms/aws"
+  description      = "kms key for ${local.destination_bucket}"
+  create_kms_alias = true
+  alias_name       = "alias/${local.destination_bucket}-key-alias"
+  tags             = local.tags
+
+  providers = {
+    aws = aws.dest
+  }
+}
+
 module "source_bucket" {
   source                 = "../../"
   bucket                 = local.source_bucket
-  sse_kms_master_key_arn = module.kms_key.arn
+  sse_kms_master_key_arn = module.source_kms_key.arn
   force_destroy          = true
 
   replication_configuration = {
@@ -42,7 +63,7 @@ module "source_bucket" {
           storage_class = "STANDARD"
 
           encryption_configuration = {
-            replica_kms_key_id = module.kms_key.arn
+            replica_kms_key_id = module.destination_kms_key.arn
           }
         }
 
@@ -79,7 +100,7 @@ module "source_bucket" {
           storage_class = "STANDARD"
 
           encryption_configuration = {
-            replica_kms_key_id = module.kms_key.arn
+            replica_kms_key_id = module.destination_kms_key.arn
           }
         }
 
@@ -98,8 +119,12 @@ module "source_bucket" {
 module "destination_bucket" {
   source                 = "../../"
   bucket                 = local.destination_bucket
-  sse_kms_master_key_arn = module.kms_key.arn
+  sse_kms_master_key_arn = module.destination_kms_key.arn
   force_destroy          = true
+
+  providers = {
+    aws = aws.dest
+  }
 
   tags = {
     environment = "examples"

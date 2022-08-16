@@ -10,7 +10,11 @@ This terraform module creates an S3 Bucket with the options of adding other s3 b
 Examples available [here](https://github.com/boldlink/terraform-aws-s3/tree/main/examples)
 
 ## Usage
-*NOTE*: These examples use the latest version of this module
+*Points to NOTE*:
+- These examples use the latest version of this module
+- This module has encryption enabled by default, therefore when replicating buckets to other buckets the associated replication role must have `encryption` and `decryption` permissions enabled for both the source bucket kms key and the destination bucket kms key
+- All public access in blocked by default in this module
+- When replicating to encrypted buckets in another account, the kms policy in the destination account must enable required kms permissions for the principle(s)/role in the source/origin account. The destination bucket policy should also allow S3 Replication permissions from the source bucket.
 
 ```hcl
 locals {
