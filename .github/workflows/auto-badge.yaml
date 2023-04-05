@@ -1,0 +1,28 @@
+name: auto-badge
+
+on:
+  push:
+
+    branches:
+      - 'fix/*'
+      - 'fixes/*'
+      - 'feature/*'
+      - 'features/*'
+      - 'hotfix/*'
+      - 'hotfixes/*'
+      - 'release/*'
+      - 'releases/*'
+      - 'chore/*'
+      - 'chores/*'
+      - 'automation*'
+
+permissions: read-all
+
+jobs:
+  auto-badge:
+    permissions:
+      contents: write
+    uses: boldlink/terraform-module-support/.github/workflows/auto-badge.yaml@main
+    secrets:
+      AUTOMATION_TOKEN: ${{ secrets.AUTOMATION_TOKEN }}
+      SLACK_WEBHOOK : ${{secrets.SLACK_WEBHOOK}}
