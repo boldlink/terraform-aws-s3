@@ -1,0 +1,26 @@
+name: Checkov
+on:
+  push:
+    branches:
+      - '!main'
+      - 'fix/*'
+      - 'fixes/*'
+      - 'feature/*'
+      - 'features/*'
+      - 'hotfix/*'
+      - 'hotfixes/*'
+      - 'release/*'
+      - 'releases/*'
+      - 'chore/*'
+      - 'chores/*'
+      - 'automation*'
+  schedule:
+    - cron: "00 18 * * *"
+
+permissions: read-all
+
+jobs:
+  checkov-scan:
+    uses: boldlink/terraform-module-support/.github/workflows/checkov.yaml@main
+    secrets:
+      SLACK_WEBHOOK : ${{secrets.SLACK_WEBHOOK}}
