@@ -71,6 +71,8 @@ The following features have now been added as stand-alone resources in this rele
 - Included most basic/common settings in module
 
 [Unreleased]: https://github.com/boldlink/terraform-aws-s3/compare/2.2.0...HEAD
+
+[2.2.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.2.1
 [2.2.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.2.0
 [2.1.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.1.1
 [2.1.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.1.0
