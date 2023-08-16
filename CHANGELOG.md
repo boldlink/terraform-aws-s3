@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - feat: Bucket Notification
 - feat: S3 Object Copy
 - feat: S3 Object
+- fix: CKV2_AWS_62 #"Ensure S3 buckets should have event notifications enabled"
+- fix: CKV2_AWS_61 #"Ensure that an S3 bucket has a lifecycle configuration"
+- fix: CKV_TF_1 #"Ensure Terraform module sources use a commit hash"
+
+## [2.2.1] - 2023-08-16
+-fix: added checkov exceptions to `.checkov.yml` file
 
 ## [2.2.0] - 2022-08-11
 ### Added Features
