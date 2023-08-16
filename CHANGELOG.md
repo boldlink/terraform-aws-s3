@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - feat: Bucket Notification
 - feat: S3 Object Copy
 - feat: S3 Object
+- fix: CKV2_AWS_62 #"Ensure S3 buckets should have event notifications enabled"
+- fix: CKV2_AWS_61 #"Ensure that an S3 bucket has a lifecycle configuration"
+- fix: CKV_TF_1 #"Ensure Terraform module sources use a commit hash"
+
+## [2.2.1] - 2023-08-16
+-fix: added checkov exceptions to `.checkov.yml` file
 
 ## [2.2.0] - 2022-08-11
 ### Added Features
@@ -65,6 +71,8 @@ The following features have now been added as stand-alone resources in this rele
 - Included most basic/common settings in module
 
 [Unreleased]: https://github.com/boldlink/terraform-aws-s3/compare/2.2.0...HEAD
+
+[2.2.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.2.1
 [2.2.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.2.0
 [2.1.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.1.1
 [2.1.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.1.0
