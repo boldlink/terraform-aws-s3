@@ -1,5 +1,5 @@
 module "minimum" {
- source = "../../"
+  source = "../../"
   bucket = var.name
   tags   = var.tags
 }
