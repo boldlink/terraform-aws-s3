@@ -1,22 +1,20 @@
 module "kms_key" {
   #checkov:skip=CKV_TF_1: "Ensure Terraform module sources use a commit hash"
   source           = "boldlink/kms/aws"
-  description      = "kms key for ${local.name}"
+  description      = "kms key for ${var.name}"
   create_kms_alias = true
-  alias_name       = "alias/${local.name}-key-alias"
-
-  tags = {
-    environment = "dev"
-    name        = local.name
-  }
+  alias_name       = "alias/${var.name}-key-alias"
+  tags             = local.tags
 }
 
 module "complete" {
   source                 = "../../"
-  bucket                 = local.name
+  bucket                 = var.name
   bucket_policy          = data.aws_iam_policy_document.s3.json
   sse_kms_master_key_arn = module.kms_key.arn
   force_destroy          = true
+  eventbridge            = true
+  tags                   = local.tags
 
   s3_logging = {
     target_bucket = module.s3_logging.id
@@ -71,10 +69,85 @@ module "complete" {
     }
   }
 
-  tags = {
-    Name        = local.name
-    Environment = "Dev"
-  }
+  lifecycle_configuration = [
+    {
+      id     = "config"
+      status = "Enabled"
+
+      filter = {
+        prefix = "config/"
+      }
+
+      noncurrent_version_expiration = [
+        {
+          days = 150
+        }
+      ]
+
+      abort_incomplete_multipart_upload_days = 7
+
+      noncurrent_version_transition = [
+        {
+          days          = 30
+          storage_class = "STANDARD_IA"
+        },
+        {
+          days          = 60
+          storage_class = "ONEZONE_IA"
+        },
+        {
+          days          = 90
+          storage_class = "GLACIER"
+        }
+      ]
+    },
+    {
+      id     = "log"
+      status = "Enabled"
+
+      expiration = [
+        {
+          days = 90
+        }
+      ]
+
+      filter = {
+        and = {
+          prefix = "log/"
+
+          tags = {
+            rule      = "log"
+            autoclean = "true"
+          }
+        }
+      }
+
+      transition = [
+        {
+          days          = 30
+          storage_class = "STANDARD_IA"
+        },
+        {
+          days          = 60
+          storage_class = "GLACIER"
+        }
+      ]
+    },
+    {
+      id     = "tmp"
+      status = "Enabled"
+
+      filter = {
+        prefix = "tmp/"
+      }
+
+      expiration = [
+        {
+          date = "2024-01-13T00:00:00Z"
+        }
+      ]
+    }
+  ]
 }
 
 module "s3_logging" {

@@ -48,11 +48,19 @@ resource "aws_s3_bucket_cors_configuration" "main" {
   }
 }
 
+resource "aws_s3_bucket_ownership_controls" "main" {
+  bucket = aws_s3_bucket.main.bucket
+  rule {
+    object_ownership = var.object_ownership
+  }
+}
+
 resource "aws_s3_bucket_acl" "main" {
   count                 = length(keys(var.bucket_acl)) > 0 ? 1 : 0
   bucket                = aws_s3_bucket.main.bucket
   acl                   = try(var.bucket_acl["acl"], null)
   expected_bucket_owner = var.expected_bucket_owner
+  depends_on            = [aws_s3_bucket_ownership_controls.main]
 
   dynamic "access_control_policy" {
     for_each = try([var.bucket_acl["access_control_policy"]], [])
@@ -239,6 +247,144 @@ resource "aws_s3_bucket_replication_configuration" "main" {
         for_each = try([rule.value.existing_object_replication], [])
         content {
           status = existing_object_replication.value.status
+        }
+      }
+    }
+  }
+
+  # Must have bucket versioning enabled first
+  depends_on = [aws_s3_bucket_versioning.main]
+}
+
+
+resource "aws_s3_bucket_notification" "main" {
+  count       = length(var.lambda_function) > 0 || length(var.queue) > 0 || length(var.topic) > 0 ? 1 : 0
+  bucket      = aws_s3_bucket.main.id
+  eventbridge = var.eventbridge
+
+  dynamic "lambda_function" {
+    for_each = var.lambda_function
+
+    content {
+      id                  = try(lambda_function.value.id, null)
+      lambda_function_arn = lambda_function.value.lambda_function_arn
+      events              = lambda_function.value.events
+      filter_prefix       = try(lambda_function.value.filter_prefix, null)
+      filter_suffix       = try(lambda_function.value.filter_suffix, null)
+    }
+  }
+
+  dynamic "queue" {
+    for_each = var.queue
+
+    content {
+      id            = try(queue.value.id, null)
+      queue_arn     = queue.value.queue_arn
+      events        = queue.value.events
+      filter_prefix = try(queue.value.filter_prefix, null)
+      filter_suffix = try(queue.value.filter_suffix, null)
+    }
+  }
+
+  dynamic "topic" {
+    for_each = var.topic
+
+    content {
+      id            = try(topic.value.id, null)
+      topic_arn     = topic.value.topic_arn
+      events        = topic.value.events
+      filter_prefix = try(topic.value.filter_prefix, null)
+      filter_suffix = try(topic.value.filter_suffix, null)
+    }
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "main" {
+  count  = length(var.lifecycle_configuration) > 0 ? 1 : 0
+  bucket = aws_s3_bucket.main.id
+
+  dynamic "rule" {
+    for_each = var.lifecycle_configuration
+
+    content {
+      id     = rule.value.id
+      status = try(rule.value.status, "Disabled")
+
+      dynamic "abort_incomplete_multipart_upload" {
+        for_each = try([rule.value.abort_incomplete_multipart_upload_days], [])
+        content {
+          days_after_initiation = try(rule.value.abort_incomplete_multipart_upload_days, null)
+        }
+      }
+
+      dynamic "expiration" {
+        for_each = try(flatten([rule.value.expiration]), [])
+        content {
+          date                         = try(expiration.value.date, null)
+          days                         = try(expiration.value.days, null)
+          expired_object_delete_marker = try(expiration.value.expired_object_delete_marker, null)
+        }
+      }
+
+      dynamic "filter" {
+        for_each = [for v in try(flatten([rule.value.filter]), []) : v if max(length(keys(v)), length(try(rule.value.filter.tags, rule.value.filter.tag, []))) == 1]
+        content {
+          prefix                   = try(filter.value.prefix, null)
+          object_size_greater_than = try(filter.value.object_size_greater_than, null)
+          object_size_less_than    = try(filter.value.object_size_less_than, null)
+
+          dynamic "tag" {
+            for_each = try([filter.value.tag], [])
+
+            content {
+              key   = tag.value.key
+              value = tag.value.value
+            }
+          }
+        }
+      }
+
+      dynamic "filter" {
+        for_each = length(try(flatten([rule.value.filter]), [])) > 0 ? [] : [true]
+        content {
+        }
+      }
+
+      dynamic "filter" {
+        for_each = [for v in try(flatten([rule.value.filter]), []) : v if max(length(keys(v)), length(try(rule.value.filter.tags, rule.value.filter.tag, []))) > 1]
+        content {
+          and {
+            object_size_greater_than = try(rule.value.filter.and.object_size_greater_than, null)
+            object_size_less_than    = try(rule.value.filter.and.object_size_less_than, null)
+            prefix                   = try(rule.value.filter.and.prefix, "")
+            tags                     = try(rule.value.filter.and.tags, null)
+          }
+        }
+      }
+
+      dynamic "noncurrent_version_expiration" {
+        for_each = try(flatten([rule.value.noncurrent_version_expiration]), [])
+        content {
+          newer_noncurrent_versions = try(noncurrent_version_expiration.value.newer_noncurrent_versions, null)
+          noncurrent_days           = try(noncurrent_version_expiration.value.days, noncurrent_version_expiration.value.noncurrent_days, null)
+        }
+      }
+
+      dynamic "noncurrent_version_transition" {
+        for_each = try(flatten([rule.value.noncurrent_version_transition]), [])
+        content {
+          newer_noncurrent_versions = try(noncurrent_version_transition.value.newer_noncurrent_versions, null)
+          noncurrent_days           = try(noncurrent_version_transition.value.days, noncurrent_version_transition.value.noncurrent_days, null)
+          storage_class             = noncurrent_version_transition.value.storage_class
+        }
+      }
+
+      dynamic "transition" {
+        for_each = try(flatten([rule.value.transition]), [])
+        content {
+          date          = try(transition.value.days, null) != null ? null : try(transition.value.date, null)
+          days          = try(transition.value.days, 0)
+          storage_class = transition.value.storage_class
         }
       }
     }

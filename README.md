@@ -16,10 +16,15 @@
 ## Description
 This terraform module creates an S3 Bucket with the options of adding other s3 bucket configurations.
 
-Examples available [here](https://github.com/boldlink/terraform-aws-s3/tree/main/examples)
+### Reasons to Use this Module over Stand Alone Resources
+- This module is easy to use with elaborate examples
+- Adheres to AWS security best practices by using checkov to enforce compliance
+- Removes the complexity of configuring multiple stand alone resources
+
+Examples available [here](./examples)
 
 ## Usage
-*Points to NOTE*:
+**Points to NOTE**:
 - These examples use the latest version of this module
 - This module has encryption enabled by default, therefore when replicating buckets to other buckets the associated replication role must have `encryption` and `decryption` permissions enabled for both the source bucket kms key and the destination bucket kms key
 - All public access in blocked by default in this module
@@ -31,13 +36,9 @@ locals {
 }
 
 module "minimum" {
-  source = "../../"
+  source = "boldlink/s3/aws"
   bucket = local.name
-  tags = {
-    Name        = local.name
-    Environment = "Dev"
-  }
-}
+  tags   = local.tags
 }
 ```
 
@@ -59,7 +60,7 @@ module "minimum" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.12.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.15.0 |
 
 ## Modules
 
@@ -72,7 +73,10 @@ No modules.
 | [aws_s3_bucket.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_acl.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl) | resource |
 | [aws_s3_bucket_cors_configuration.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_cors_configuration) | resource |
+| [aws_s3_bucket_lifecycle_configuration.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration) | resource |
 | [aws_s3_bucket_logging.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_logging) | resource |
+| [aws_s3_bucket_notification.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_notification) | resource |
+| [aws_s3_bucket_ownership_controls.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_ownership_controls) | resource |
 | [aws_s3_bucket_policy.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_public_access_block.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_replication_configuration.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_replication_configuration) | resource |
@@ -90,9 +94,14 @@ No modules.
 | <a name="input_bucket_policy"></a> [bucket\_policy](#input\_bucket\_policy) | Attaches a policy to an S3 bucket resource. | `string` | `null` | no |
 | <a name="input_bucket_prefix"></a> [bucket\_prefix](#input\_bucket\_prefix) | Optional, Forces new resource) Creates a unique bucket name beginning with the specified prefix. Conflicts with bucket. Must be lowercase and less than or equal to 37 characters in length. | `string` | `null` | no |
 | <a name="input_cors_rule"></a> [cors\_rule](#input\_cors\_rule) | A rule of Cross-Origin Resource Sharing. | `any` | `[]` | no |
+| <a name="input_eventbridge"></a> [eventbridge](#input\_eventbridge) | Whether to enable Amazon EventBridge notifications | `bool` | `false` | no |
 | <a name="input_expected_bucket_owner"></a> [expected\_bucket\_owner](#input\_expected\_bucket\_owner) | (Optional, Forces new resource) The account ID of the expected bucket owner. | `string` | `null` | no |
 | <a name="input_force_destroy"></a> [force\_destroy](#input\_force\_destroy) | (Optional, Default:false) A boolean that indicates all objects (including any locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable. | `bool` | `false` | no |
 | <a name="input_ignore_public_acls"></a> [ignore\_public\_acls](#input\_ignore\_public\_acls) | (Optional) Whether Amazon S3 should ignore public ACLs for this bucket. | `bool` | `true` | no |
+| <a name="input_lambda_function"></a> [lambda\_function](#input\_lambda\_function) | Configuration for S3 notification lambda function | `any` | `[]` | no |
+| <a name="input_lifecycle_configuration"></a> [lifecycle\_configuration](#input\_lifecycle\_configuration) | A map of s3 lifecycle configuration | `any` | `[]` | no |
+| <a name="input_object_ownership"></a> [object\_ownership](#input\_object\_ownership) | Object ownership. Valid values: `BucketOwnerPreferred`, `ObjectWriter` or `BucketOwnerEnforced` | `string` | `"ObjectWriter"` | no |
+| <a name="input_queue"></a> [queue](#input\_queue) | Configuration for S3 notification SQS queue | `any` | `[]` | no |
 | <a name="input_replication_configuration"></a> [replication\_configuration](#input\_replication\_configuration) | Provides an independent configuration resource for S3 bucket replication configuration. | `any` | `{}` | no |
 | <a name="input_restrict_public_buckets"></a> [restrict\_public\_buckets](#input\_restrict\_public\_buckets) | (Optional) Whether Amazon S3 should restrict public bucket policies for this bucket. | `bool` | `true` | no |
 | <a name="input_s3_logging"></a> [s3\_logging](#input\_s3\_logging) | A map of configurations where to store logs | `map(any)` | `{}` | no |
@@ -100,6 +109,7 @@ No modules.
 | <a name="input_sse_kms_master_key_arn"></a> [sse\_kms\_master\_key\_arn](#input\_sse\_kms\_master\_key\_arn) | (Optional) The AWS KMS master key ARN used for the SSE-KMS encryption. This can only be used when you set the value of sse\_algorithm as `aws:kms`. The default `aws/s3` AWS KMS master key is used if this element is absent while the `sse_algorithm` is `aws:kms`. | `string` | `null` | no |
 | <a name="input_sse_sse_algorithm"></a> [sse\_sse\_algorithm](#input\_sse\_sse\_algorithm) | (Required) The server-side encryption algorithm to use. Valid values are `AES256` and `aws:kms` | `string` | `"aws:kms"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | (Optional) A map of tags to assign to the bucket. | `map(string)` | `{}` | no |
+| <a name="input_topic"></a> [topic](#input\_topic) | Configuration for S3 notification SNS topic | `any` | `[]` | no |
 | <a name="input_versioning_mfa"></a> [versioning\_mfa](#input\_versioning\_mfa) | The concatenation of the authentication device's serial number, a space, and the value that is displayed on your authentication device. | `string` | `null` | no |
 | <a name="input_versioning_mfa_delete"></a> [versioning\_mfa\_delete](#input\_versioning\_mfa\_delete) | (Optional) Specifies whether MFA delete is enabled in the bucket versioning configuration. Valid values: `Enabled` or `Disabled`. | `string` | `null` | no |
 | <a name="input_versioning_status"></a> [versioning\_status](#input\_versioning\_status) | (Required) The versioning state of the bucket. Valid values: `Enabled`, `Suspended`, or `Disabled`. Disabled should only be used when creating or importing resources that correspond to unversioned S3 buckets. | `string` | `"Enabled"` | no |
@@ -134,10 +144,22 @@ This repository uses third party software:
   * Manually use via pre-commit
 
 ### Makefile
-The makefile contain in this repo is optimised for linux paths and the main purpose is to execute testing for now.
-* Create all tests:
-`$ make tests`
-* Clean all tests:
-`$ make clean`
+The makefile contained in this repo is optimized for linux paths and the main purpose is to execute testing for now.
+* Create all tests stacks including any supporting resources:
+```console
+make tests
+```
+* Clean all tests *except* existing supporting resources:
+```console
+make clean
+```
+* Clean supporting resources - this is done separately so you can test your module build/modify/destroy independently.
+```console
+make cleansupporting
+```
+* !!!DANGER!!! Clean the state files from examples and test/supportingResources - use with CAUTION!!!
+```console
+make cleanstatefiles
+```
 
-#### BOLDLink-SIG 2022
+#### BOLDLink-SIG 2023

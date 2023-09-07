@@ -10,12 +10,12 @@ provider "aws" {
 module "replication_role" {
   #checkov:skip=CKV_TF_1: "Ensure Terraform module sources use a commit hash"
   source                = "boldlink/iam-role/aws"
-  name                  = local.source_bucket
+  name                  = var.source_bucket
   description           = "S3 replication role"
   assume_role_policy    = local.assume_role_policy
   force_detach_policies = true
   policies = {
-    "${local.source_bucket}-policy" = {
+    "${var.source_bucket}-policy" = {
       policy = local.role_policy
     }
   }
@@ -24,18 +24,18 @@ module "replication_role" {
 module "source_kms_key" {
   #checkov:skip=CKV_TF_1: "Ensure Terraform module sources use a commit hash"
   source           = "boldlink/kms/aws"
-  description      = "kms key for ${local.source_bucket}"
+  description      = "kms key for ${var.source_bucket}"
   create_kms_alias = true
-  alias_name       = "alias/${local.source_bucket}-key-alias"
+  alias_name       = "alias/${var.source_bucket}-key-alias"
   tags             = local.tags
 }
 
 module "destination_kms_key" {
   #checkov:skip=CKV_TF_1: "Ensure Terraform module sources use a commit hash"
   source           = "boldlink/kms/aws"
-  description      = "kms key for ${local.destination_bucket}"
+  description      = "kms key for ${var.destination_bucket}"
   create_kms_alias = true
-  alias_name       = "alias/${local.destination_bucket}-key-alias"
+  alias_name       = "alias/${var.destination_bucket}-key-alias"
   tags             = local.tags
 
   providers = {
@@ -45,7 +45,7 @@ module "destination_kms_key" {
 
 module "source_bucket" {
   source                 = "../../"
-  bucket                 = local.source_bucket
+  bucket                 = var.source_bucket
   sse_kms_master_key_arn = module.source_kms_key.arn
   force_destroy          = true
 
@@ -121,7 +121,7 @@ module "source_bucket" {
 
 module "destination_bucket" {
   source                 = "../../"
-  bucket                 = local.destination_bucket
+  bucket                 = var.destination_bucket
   sse_kms_master_key_arn = module.destination_kms_key.arn
   force_destroy          = true
 
@@ -131,6 +131,6 @@ module "destination_bucket" {
 
   tags = {
     environment = "examples"
-    name        = local.destination_bucket
+    name        = var.destination_bucket
   }
 }

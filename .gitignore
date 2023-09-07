@@ -43,3 +43,4 @@ terraform-docs.*
 tflint_*
 terraform_*
 *.log
+*.zip
