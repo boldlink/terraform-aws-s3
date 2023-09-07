@@ -258,7 +258,7 @@ resource "aws_s3_bucket_replication_configuration" "main" {
 
 
 resource "aws_s3_bucket_notification" "main" {
-  count       = length(var.lambda_function) > 0 || length(var.queue) > 0 || length(var.topic) > 0 ? 1 : 0
+  count       = var.eventbridge || length(var.lambda_function) > 0 || length(var.queue) > 0 || length(var.topic) > 0 ? 1 : 0
   bucket      = aws_s3_bucket.main.id
   eventbridge = var.eventbridge
 
