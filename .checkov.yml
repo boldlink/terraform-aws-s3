@@ -8,3 +8,4 @@ skip-check:
 ### These checkov checks have been skipped because these features are in future releases
 - CKV_AWS_144 #Ensure that S3 bucket has cross-region replication enabled
 - CKV_AWS_300 #Ensure S3 lifecycle configuration sets period for aborting failed uploads
+- CKV_TF_1 #Ensure Terraform module sources use a commit hash

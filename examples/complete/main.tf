@@ -1,6 +1,6 @@
 module "kms_key" {
-  #checkov:skip=CKV_TF_1: "Ensure Terraform module sources use a commit hash"
   source           = "boldlink/kms/aws"
+  version          = "1.1.0"
   description      = "kms key for ${var.name}"
   create_kms_alias = true
   alias_name       = "alias/${var.name}-key-alias"

@@ -17,9 +17,14 @@
 This terraform module creates an S3 Bucket with the options of adding other s3 bucket configurations.
 
 ### Reasons to Use this Module over Stand Alone Resources
-- This module is easy to use with elaborate examples
-- Adheres to AWS security best practices by using checkov to enforce compliance
-- Removes the complexity of configuring multiple stand alone resources
+- This module offers simplicity through detailed examples, making it user-friendly.
+- It follows AWS security best practices by utilizing checkov to ensure compliance.
+- It simplifies the process of setting up s3 bucket with the desired configurations
+- The module provides support for lifecycle configuration.
+- In response to a recent AWS S3 update, this module now includes ownership control, allowing users to specify ownership types. The default is `ObjectWriter`
+- Encryption is enabled by default, allowing users to utilize existing AWS Customer Master Keys (CMKs) or create new ones using the module. Additionally, it supports Server-Side Encryption (SSE).
+- It includes support for S3 bucket notifications, enabling users to set up event-driven workflows.
+- Versioning is enabled by default, providing automatic version control.
 
 Examples available [here](./examples)
 
@@ -36,9 +41,10 @@ locals {
 }
 
 module "minimum" {
-  source = "boldlink/s3/aws"
-  bucket = local.name
-  tags   = local.tags
+  source  = "boldlink/s3/aws"
+  version = "latest_module_version>"
+  bucket  = local.name
+  tags    = local.tags
 }
 ```
 
