@@ -14,6 +14,7 @@ module "complete" {
   sse_kms_master_key_arn = module.kms_key.arn
   force_destroy          = true
   eventbridge            = true
+  versioning_status      = "Enabled"
   tags                   = local.tags
 
   s3_logging = {

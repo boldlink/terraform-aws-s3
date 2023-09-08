@@ -88,7 +88,7 @@ variable "versioning_mfa" {
 variable "versioning_status" {
   type        = string
   description = "(Required) The versioning state of the bucket. Valid values: `Enabled`, `Suspended`, or `Disabled`. Disabled should only be used when creating or importing resources that correspond to unversioned S3 buckets."
-  default     = "Enabled"
+  default     = "Disabled"
 }
 
 variable "versioning_mfa_delete" {

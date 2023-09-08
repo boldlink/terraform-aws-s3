@@ -24,7 +24,7 @@ This terraform module creates an S3 Bucket with the options of adding other s3 b
 - In response to a recent AWS S3 update, this module now includes ownership control, allowing users to specify ownership types. The default is `ObjectWriter`
 - Encryption is enabled by default, allowing users to utilize existing AWS Customer Master Keys (CMKs) or create new ones using the module. Additionally, it supports Server-Side Encryption (SSE).
 - It includes support for S3 bucket notifications, enabling users to set up event-driven workflows.
-- Versioning is enabled by default, providing automatic version control.
+- Supports versioning which is in this module disabled by default, providing automatic version control.
 
 Examples available [here](./examples)
 
@@ -42,7 +42,7 @@ locals {
 
 module "minimum" {
   source  = "boldlink/s3/aws"
-  version = "latest_module_version>"
+  version = "<latest_module_version>"
   bucket  = local.name
   tags    = local.tags
 }
@@ -118,7 +118,7 @@ No modules.
 | <a name="input_topic"></a> [topic](#input\_topic) | Configuration for S3 notification SNS topic | `any` | `[]` | no |
 | <a name="input_versioning_mfa"></a> [versioning\_mfa](#input\_versioning\_mfa) | The concatenation of the authentication device's serial number, a space, and the value that is displayed on your authentication device. | `string` | `null` | no |
 | <a name="input_versioning_mfa_delete"></a> [versioning\_mfa\_delete](#input\_versioning\_mfa\_delete) | (Optional) Specifies whether MFA delete is enabled in the bucket versioning configuration. Valid values: `Enabled` or `Disabled`. | `string` | `null` | no |
-| <a name="input_versioning_status"></a> [versioning\_status](#input\_versioning\_status) | (Required) The versioning state of the bucket. Valid values: `Enabled`, `Suspended`, or `Disabled`. Disabled should only be used when creating or importing resources that correspond to unversioned S3 buckets. | `string` | `"Enabled"` | no |
+| <a name="input_versioning_status"></a> [versioning\_status](#input\_versioning\_status) | (Required) The versioning state of the bucket. Valid values: `Enabled`, `Suspended`, or `Disabled`. Disabled should only be used when creating or importing resources that correspond to unversioned S3 buckets. | `string` | `"Disabled"` | no |
 
 ## Outputs
 
@@ -132,8 +132,6 @@ No modules.
 | <a name="output_id"></a> [id](#output\_id) | The name of the bucket. |
 | <a name="output_region"></a> [region](#output\_region) | The AWS region this bucket resides in. |
 | <a name="output_tags_all"></a> [tags\_all](#output\_tags\_all) | A map of tags assigned to the resource, including those inherited from the provider default\_tags |
-| <a name="output_website_domain"></a> [website\_domain](#output\_website\_domain) | The domain of the website endpoint, if the bucket is configured with a website. If not, this will be an empty string. This is used to create Route 53 alias records. |
-| <a name="output_website_endpoint"></a> [website\_endpoint](#output\_website\_endpoint) | The website endpoint, if the bucket is configured with a website. If not, this will be an empty string |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Third party software
