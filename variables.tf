@@ -45,7 +45,7 @@ variable "bucket_acl" {
 variable "bucket_policy" {
   type        = string
   description = "Attaches a policy to an S3 bucket resource."
-  default     = null
+  default     = ""
 }
 
 ## Public access block

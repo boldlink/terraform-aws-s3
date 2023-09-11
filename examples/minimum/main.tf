@@ -8,5 +8,5 @@ resource "random_string" "bucket" {
 module "minimum" {
   source = "../../"
   bucket = "${var.name}-${random_string.bucket.result}"
-  tags   = var.tags
+  tags   = merge({ "Name" = "${var.name}-${random_string.bucket.result}" }, var.tags)
 }

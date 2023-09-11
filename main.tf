@@ -7,9 +7,11 @@ resource "aws_s3_bucket" "main" {
 }
 
 resource "aws_s3_bucket_policy" "main" {
-  count  = var.bucket_policy != null ? 1 : 0
   bucket = aws_s3_bucket.main.bucket
-  policy = var.bucket_policy
+  policy = data.aws_iam_policy_document.combined.json
+  depends_on = [
+    aws_s3_bucket.main
+  ]
 }
 
 resource "aws_s3_bucket_public_access_block" "main" {

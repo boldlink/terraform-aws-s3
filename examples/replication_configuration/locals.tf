@@ -1,5 +1,4 @@
 locals {
-  tags               = merge({ "Name" = "${var.source_bucket}-${random_string.bucket.result}" }, var.tags)
   source_bucket      = "${var.source_bucket}-${random_string.bucket.result}"
   destination_bucket = "${var.destination_bucket}-${random_string.bucket.result}"
   assume_role_policy = jsonencode({

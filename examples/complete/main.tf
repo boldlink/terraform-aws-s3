@@ -1,7 +1,14 @@
+resource "random_string" "bucket" {
+  length  = 5
+  special = false
+  upper   = false
+  numeric = false
+}
+
 module "kms_key" {
   source           = "boldlink/kms/aws"
   version          = "1.1.0"
-  description      = "kms key for ${var.name}"
+  description      = "kms key for ${local.bucket}"
   create_kms_alias = true
   alias_name       = "alias/${var.name}-key-alias"
   tags             = local.tags
@@ -9,7 +16,7 @@ module "kms_key" {
 
 module "complete" {
   source                 = "../../"
-  bucket                 = var.name
+  bucket                 = local.bucket
   bucket_policy          = data.aws_iam_policy_document.s3.json
   sse_kms_master_key_arn = module.kms_key.arn
   force_destroy          = true
@@ -149,10 +156,18 @@ module "complete" {
       ]
     }
   ]
+
+  depends_on = [
+    random_string.bucket
+  ]
 }
 
 module "s3_logging" {
   source        = "./../../"
-  bucket        = "example-logging-bucket"
+  bucket        = "example-logging-bucket-${random_string.bucket.result}"
   force_destroy = true
+
+  depends_on = [
+    random_string.bucket
+  ]
 }

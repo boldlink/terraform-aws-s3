@@ -34,7 +34,7 @@ module "source_kms_key" {
   description      = "kms key for ${var.source_bucket}"
   create_kms_alias = true
   alias_name       = "alias/${var.source_bucket}-key-alias"
-  tags             = local.tags
+  tags             = merge({ "Name" = local.source_bucket }, var.tags)
 }
 
 module "destination_kms_key" {
@@ -43,7 +43,7 @@ module "destination_kms_key" {
   description      = "kms key for ${var.destination_bucket}"
   create_kms_alias = true
   alias_name       = "alias/${var.destination_bucket}-key-alias"
-  tags             = local.tags
+  tags             = merge({ "Name" = local.destination_bucket }, var.tags)
 
   providers = {
     aws = aws.dest
@@ -124,7 +124,7 @@ module "source_bucket" {
     ]
   }
 
-  tags = local.tags
+  tags = merge({ "Name" = local.source_bucket }, var.tags)
 }
 
 module "destination_bucket" {
@@ -138,8 +138,5 @@ module "destination_bucket" {
     aws = aws.dest
   }
 
-  tags = {
-    environment = "examples"
-    name        = var.destination_bucket
-  }
+  tags = merge({ "Name" = local.destination_bucket }, var.tags)
 }
