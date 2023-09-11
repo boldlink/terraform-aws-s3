@@ -7,6 +7,13 @@ provider "aws" {
   region = "eu-central-1"
 }
 
+resource "random_string" "bucket" {
+  length  = 5
+  special = false
+  upper   = false
+  numeric = false
+}
+
 module "replication_role" {
   #checkov:skip=CKV_TF_1: "Ensure Terraform module sources use a commit hash"
   source                = "boldlink/iam-role/aws"
@@ -45,8 +52,9 @@ module "destination_kms_key" {
 
 module "source_bucket" {
   source                 = "../../"
-  bucket                 = var.source_bucket
+  bucket                 = local.source_bucket
   sse_kms_master_key_arn = module.source_kms_key.arn
+  versioning_status      = "Enabled"
   force_destroy          = true
 
   replication_configuration = {
@@ -121,8 +129,9 @@ module "source_bucket" {
 
 module "destination_bucket" {
   source                 = "../../"
-  bucket                 = var.destination_bucket
+  bucket                 = local.destination_bucket
   sse_kms_master_key_arn = module.destination_kms_key.arn
+  versioning_status      = "Enabled"
   force_destroy          = true
 
   providers = {
