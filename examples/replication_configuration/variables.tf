@@ -1,13 +1,13 @@
 variable "source_bucket" {
   type        = string
   description = "The name of the source bucket"
-  default     = "boldlink-replication-example-src-bucket"
+  default     = "replication-example-src-bucket"
 }
 
 variable "destination_bucket" {
   type        = string
   description = "The name of the destination bucket"
-  default     = "boldlink-replication-example-dest-bucket"
+  default     = "replication-example-dest-bucket"
 }
 
 variable "tags" {

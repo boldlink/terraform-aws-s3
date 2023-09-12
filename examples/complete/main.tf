@@ -164,7 +164,7 @@ module "complete" {
 
 module "s3_logging" {
   source        = "./../../"
-  bucket        = "example-logging-bucket-${random_string.bucket.result}"
+  bucket        = "logging-example-bucket-${random_string.bucket.result}"
   force_destroy = true
 
   depends_on = [
