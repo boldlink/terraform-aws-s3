@@ -193,7 +193,7 @@ resource "aws_s3_bucket_replication_configuration" "main" {
       }
 
       dynamic "filter" {
-        for_each = try(flatten([rule.value.filter]), []) != [] ? try(flatten([rule.value.filter]), []) : []
+        for_each = length(try(rule.value.filter.tags, rule.value.filter.tag, [])) == 1 ? try(flatten([rule.value.filter]), []) : []
 
         content {
           prefix = try(filter.value.prefix, null)
@@ -209,6 +209,7 @@ resource "aws_s3_bucket_replication_configuration" "main" {
         }
       }
 
+
       dynamic "filter" {
         for_each = length(try(flatten([rule.value.filter]), [])) > 0 ? [] : [true]
         content {
@@ -216,7 +217,7 @@ resource "aws_s3_bucket_replication_configuration" "main" {
       }
 
       dynamic "filter" {
-        for_each = try([rule.value.filter.and.tags], [rule.value.filter.and.prefix], []) != [] ? try(flatten([rule.value.filter]), []) : []
+        for_each = length(try([rule.value.filter.and.tags, rule.value.filter.and.prefix], [])) > 0 ? toset([rule.value.filter]) : toset([])
         content {
           and {
             prefix = try(rule.value.filter.and.prefix, null)
@@ -224,6 +225,7 @@ resource "aws_s3_bucket_replication_configuration" "main" {
           }
         }
       }
+
 
       dynamic "source_selection_criteria" {
         for_each = try([rule.value.source_selection_criteria], [])

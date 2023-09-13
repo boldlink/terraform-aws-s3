@@ -36,6 +36,10 @@ Examples available [here](./examples)
 - All public access in blocked by default in this module
 - When replicating to encrypted buckets in another account, the kms policy in the destination account must enable required kms permissions for the principle(s)/role in the source/origin account. The destination bucket policy should also allow S3 Replication permissions from the source bucket.
 
+## Known Issue
+- When deploying an AWS S3 bucket with replication configuration using this terraform module, the `terraform plan` command may report drift detection even when there are no changes to the replication configuration, especially when filters are utilized within the replication configuration block. There is a currently active GitHub issue [here](https://github.com/hashicorp/terraform-provider-aws/issues/665) regarding this matter, and it might be resolved in a future release of Terraform.
+- Despite the drift detection issue, the filter option within the replication configuration is functioning as expected.
+
 ```hcl
 locals {
   name = "minimum-example-bucket"

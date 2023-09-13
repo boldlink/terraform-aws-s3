@@ -90,9 +90,17 @@ module "source_bucket" {
         }
       },
       {
-        id       = "logfilter"
+        id       = "log-filter"
         status   = "Enabled"
         priority = 5
+
+        filter = {
+          prefix = "log"
+
+          tag = {
+            environment = "examples"
+          }
+        }
 
         delete_marker_replication = {
           status = "Disabled"
