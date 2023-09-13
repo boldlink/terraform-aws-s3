@@ -62,8 +62,9 @@ module "source_bucket" {
 
     rules = [
       {
-        id     = "everything"
-        status = "Enabled"
+        id       = "everything"
+        status   = "Enabled"
+        priority = 1
 
         delete_marker_replication = {
           status = "Enabled"
@@ -89,18 +90,9 @@ module "source_bucket" {
         }
       },
       {
-        id       = "log-filter"
+        id       = "logfilter"
         status   = "Enabled"
         priority = 5
-
-        filter = {
-          prefix = "log"
-
-          tag = {
-            key   = "environment"
-            value = "examples"
-          }
-        }
 
         delete_marker_replication = {
           status = "Disabled"

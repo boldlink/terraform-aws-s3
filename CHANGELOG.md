@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - fix: `Error Putting S3 Notification Configuration: Unable to validate the following destination configurations` when using using notifications on complete example.
+- fix: replication configuration showing drift detection when filter is used, even when values are unchanged
 - fix: CKV_AWS_300 #Ensure S3 lifecycle configuration sets period for aborting failed uploads
 - feat: show notification usage in complete example after fixing the notification error
 - feat: Document on README needed permissions and steps to replicate encrypted bucket objects

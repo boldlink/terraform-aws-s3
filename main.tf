@@ -199,11 +199,11 @@ resource "aws_s3_bucket_replication_configuration" "main" {
           prefix = try(filter.value.prefix, null)
 
           dynamic "tag" {
-            for_each = try([filter.value.tag], [])
+            for_each = try(filter.value.tags, filter.value.tag, [])
 
             content {
-              key   = try(tag.value.key, null)
-              value = try(tag.value.value, null)
+              key   = tag.key
+              value = tag.value
             }
           }
         }
