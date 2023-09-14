@@ -29,7 +29,7 @@ This terraform module creates an S3 Bucket with the options of adding other s3 b
 Examples available [here](./examples)
 
 ## Usage
-**Points to NOTE**:
+**NOTE**:
 - If you have been using version 2.2.0 or any earlier iteration of this module, it is **important** to upgrade to the most recent release. This action is prompted by an AWS update pertaining to S3, which introduced an issue when employing bucket ACLs.
 - These examples use the latest version of this module
 - This module has encryption enabled by default, therefore when replicating buckets to other buckets the associated replication role must have `encryption` and `decryption` permissions enabled for both the source bucket kms key and the destination bucket kms key

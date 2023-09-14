@@ -15,7 +15,6 @@ resource "random_string" "bucket" {
 }
 
 module "replication_role" {
-  #checkov:skip=CKV_TF_1: "Ensure Terraform module sources use a commit hash"
   source                = "boldlink/iam-role/aws"
   name                  = var.source_bucket
   description           = "S3 replication role"
@@ -29,7 +28,6 @@ module "replication_role" {
 }
 
 module "source_kms_key" {
-  #checkov:skip=CKV_TF_1: "Ensure Terraform module sources use a commit hash"
   source           = "boldlink/kms/aws"
   description      = "kms key for ${var.source_bucket}"
   create_kms_alias = true
@@ -38,7 +36,6 @@ module "source_kms_key" {
 }
 
 module "destination_kms_key" {
-  #checkov:skip=CKV_TF_1: "Ensure Terraform module sources use a commit hash"
   source           = "boldlink/kms/aws"
   description      = "kms key for ${var.destination_bucket}"
   create_kms_alias = true
