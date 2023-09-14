@@ -5,9 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- fix: `Error Putting S3 Notification Configuration: Unable to validate the following destination configurations` when using using notifications on complete example.
+- fix: replication configuration showing drift detection when filter is used, even when values are unchanged
+- fix: CKV_AWS_300 #Ensure S3 lifecycle configuration sets period for aborting failed uploads
+- feat: show notification usage in complete example after fixing the notification error
 - feat: Document on README needed permissions and steps to replicate encrypted bucket objects
 - feat: Acceleration Configuration
-- feat: Lifecycle Configuration
 - feat: Object Lock Configuration
 - feat: Request Payment Configuration
 - feat: Website Configuration
@@ -15,12 +18,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - feat: Intelligent Tiering Configuration
 - feat: Bucket Inventory
 - feat: Bucket Metric
-- feat: Bucket Notification
 - feat: S3 Object Copy
 - feat: S3 Object
-- fix: CKV2_AWS_62 #"Ensure S3 buckets should have event notifications enabled"
-- fix: CKV2_AWS_61 #"Ensure that an S3 bucket has a lifecycle configuration"
 - fix: CKV_TF_1 #"Ensure Terraform module sources use a commit hash"
+
+## [2.3.0] - 2023-09-07
+- feat: Added Lifecycle Configuration which fixes checkov alert `CKV2_AWS_62`
+- feat: Added Bucket Notification which fixes checkov alert `CKV2_AWS_61`
+- feat: Added `aws_s3_bucket_ownership_controls` which fixes acl error due to recent s3 update by aws from April 2023. See [here](https://aws.amazon.com/blogs/aws/heads-up-amazon-s3-security-changes-are-coming-in-april-of-2023/)
 
 ## [2.2.1] - 2023-08-16
 -fix: added checkov exceptions to `.checkov.yml` file
@@ -70,8 +75,9 @@ The following features have now been added as stand-alone resources in this rele
 - Initial commit
 - Included most basic/common settings in module
 
-[Unreleased]: https://github.com/boldlink/terraform-aws-s3/compare/2.2.0...HEAD
+[Unreleased]: https://github.com/boldlink/terraform-aws-s3/compare/2.3.0...HEAD
 
+[2.3.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.3.0
 [2.2.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.2.1
 [2.2.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.2.0
 [2.1.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.1.1

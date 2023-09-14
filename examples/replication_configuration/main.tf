@@ -7,36 +7,40 @@ provider "aws" {
   region = "eu-central-1"
 }
 
+resource "random_string" "bucket" {
+  length  = 5
+  special = false
+  upper   = false
+  numeric = false
+}
+
 module "replication_role" {
-  #checkov:skip=CKV_TF_1: "Ensure Terraform module sources use a commit hash"
   source                = "boldlink/iam-role/aws"
-  name                  = local.source_bucket
+  name                  = var.source_bucket
   description           = "S3 replication role"
   assume_role_policy    = local.assume_role_policy
   force_detach_policies = true
   policies = {
-    "${local.source_bucket}-policy" = {
+    "${var.source_bucket}-policy" = {
       policy = local.role_policy
     }
   }
 }
 
 module "source_kms_key" {
-  #checkov:skip=CKV_TF_1: "Ensure Terraform module sources use a commit hash"
   source           = "boldlink/kms/aws"
   description      = "kms key for ${local.source_bucket}"
   create_kms_alias = true
   alias_name       = "alias/${local.source_bucket}-key-alias"
-  tags             = local.tags
+  tags             = merge({ "Name" = local.source_bucket }, var.tags)
 }
 
 module "destination_kms_key" {
-  #checkov:skip=CKV_TF_1: "Ensure Terraform module sources use a commit hash"
   source           = "boldlink/kms/aws"
   description      = "kms key for ${local.destination_bucket}"
   create_kms_alias = true
   alias_name       = "alias/${local.destination_bucket}-key-alias"
-  tags             = local.tags
+  tags             = merge({ "Name" = local.destination_bucket }, var.tags)
 
   providers = {
     aws = aws.dest
@@ -47,6 +51,7 @@ module "source_bucket" {
   source                 = "../../"
   bucket                 = local.source_bucket
   sse_kms_master_key_arn = module.source_kms_key.arn
+  versioning_status      = "Enabled"
   force_destroy          = true
 
   replication_configuration = {
@@ -54,8 +59,9 @@ module "source_bucket" {
 
     rules = [
       {
-        id     = "everything"
-        status = "Enabled"
+        id       = "everything"
+        status   = "Enabled"
+        priority = 1
 
         delete_marker_replication = {
           status = "Enabled"
@@ -89,8 +95,7 @@ module "source_bucket" {
           prefix = "log"
 
           tag = {
-            key   = "environment"
-            value = "examples"
+            environment = "examples"
           }
         }
 
@@ -116,21 +121,19 @@ module "source_bucket" {
     ]
   }
 
-  tags = local.tags
+  tags = merge({ "Name" = local.source_bucket }, var.tags)
 }
 
 module "destination_bucket" {
   source                 = "../../"
   bucket                 = local.destination_bucket
   sse_kms_master_key_arn = module.destination_kms_key.arn
+  versioning_status      = "Enabled"
   force_destroy          = true
 
   providers = {
     aws = aws.dest
   }
 
-  tags = {
-    environment = "examples"
-    name        = local.destination_bucket
-  }
+  tags = merge({ "Name" = local.destination_bucket }, var.tags)
 }

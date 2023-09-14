@@ -37,13 +37,3 @@ output "tags_all" {
   value       = aws_s3_bucket.main.tags_all
   description = "A map of tags assigned to the resource, including those inherited from the provider default_tags"
 }
-
-output "website_endpoint" {
-  value       = aws_s3_bucket.main.website_endpoint
-  description = "The website endpoint, if the bucket is configured with a website. If not, this will be an empty string"
-}
-
-output "website_domain" {
-  value       = aws_s3_bucket.main.website_domain
-  description = "The domain of the website endpoint, if the bucket is configured with a website. If not, this will be an empty string. This is used to create Route 53 alias records."
-}

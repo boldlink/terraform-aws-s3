@@ -1,12 +1,6 @@
 locals {
-  source_bucket      = "boldlink-replication-example-src-bucket"
-  destination_bucket = "boldlink-replication-example-dest-bucket"
-
-  tags = {
-    name        = local.source_bucket
-    environment = "examples"
-  }
-
+  source_bucket      = "${var.source_bucket}-${random_string.bucket.result}"
+  destination_bucket = "${var.destination_bucket}-${random_string.bucket.result}"
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [

@@ -1,13 +1,12 @@
-locals {
-  name = "minimum-example-boldlink-bucket"
+resource "random_string" "bucket" {
+  length  = 5
+  special = false
+  upper   = false
+  numeric = false
 }
 
 module "minimum" {
   source = "../../"
-  bucket = local.name
-
-  tags = {
-    Name        = local.name
-    Environment = "Dev"
-  }
+  bucket = "${var.name}-${random_string.bucket.result}"
+  tags   = merge({ "Name" = "${var.name}-${random_string.bucket.result}" }, var.tags)
 }

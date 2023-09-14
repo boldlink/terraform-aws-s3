@@ -45,7 +45,7 @@ variable "bucket_acl" {
 variable "bucket_policy" {
   type        = string
   description = "Attaches a policy to an S3 bucket resource."
-  default     = null
+  default     = ""
 }
 
 ## Public access block
@@ -88,7 +88,7 @@ variable "versioning_mfa" {
 variable "versioning_status" {
   type        = string
   description = "(Required) The versioning state of the bucket. Valid values: `Enabled`, `Suspended`, or `Disabled`. Disabled should only be used when creating or importing resources that correspond to unversioned S3 buckets."
-  default     = "Enabled"
+  default     = "Disabled"
 }
 
 variable "versioning_mfa_delete" {
@@ -119,4 +119,40 @@ variable "s3_logging" {
   description = "A map of configurations where to store logs"
   type        = map(any)
   default     = {}
+}
+
+variable "object_ownership" {
+  type        = string
+  description = "Object ownership. Valid values: `BucketOwnerPreferred`, `ObjectWriter` or `BucketOwnerEnforced`"
+  default     = "ObjectWriter"
+}
+
+variable "lambda_function" {
+  type        = any
+  description = "Configuration for S3 notification lambda function"
+  default     = []
+}
+
+variable "queue" {
+  type        = any
+  description = "Configuration for S3 notification SQS queue"
+  default     = []
+}
+
+variable "topic" {
+  type        = any
+  description = "Configuration for S3 notification SNS topic"
+  default     = []
+}
+
+variable "lifecycle_configuration" {
+  type        = any
+  description = "A map of s3 lifecycle configuration"
+  default     = []
+}
+
+variable "eventbridge" {
+  type        = bool
+  description = "Whether to enable Amazon EventBridge notifications"
+  default     = false
 }
