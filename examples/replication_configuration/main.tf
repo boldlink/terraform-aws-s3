@@ -29,17 +29,17 @@ module "replication_role" {
 
 module "source_kms_key" {
   source           = "boldlink/kms/aws"
-  description      = "kms key for ${var.source_bucket}"
+  description      = "kms key for ${local.source_bucket}"
   create_kms_alias = true
-  alias_name       = "alias/${var.source_bucket}-key-alias"
+  alias_name       = "alias/${local.source_bucket}-key-alias"
   tags             = merge({ "Name" = local.source_bucket }, var.tags)
 }
 
 module "destination_kms_key" {
   source           = "boldlink/kms/aws"
-  description      = "kms key for ${var.destination_bucket}"
+  description      = "kms key for ${local.destination_bucket}"
   create_kms_alias = true
-  alias_name       = "alias/${var.destination_bucket}-key-alias"
+  alias_name       = "alias/${local.destination_bucket}-key-alias"
   tags             = merge({ "Name" = local.destination_bucket }, var.tags)
 
   providers = {
