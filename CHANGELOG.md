@@ -5,7 +5,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- fix: `Error Putting S3 Notification Configuration: Unable to validate the following destination configurations` when using using notifications on complete example.
 - fix: replication configuration showing drift detection when filter is used, even when values are unchanged
 - fix: CKV_AWS_300 #Ensure S3 lifecycle configuration sets period for aborting failed uploads
 - feat: show notification usage in complete example after fixing the notification error
@@ -21,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - feat: S3 Object Copy
 - feat: S3 Object
 - fix: CKV_TF_1 #"Ensure Terraform module sources use a commit hash"
+
+## [2.3.1] - 2023-09-26
+- fix: `Error Putting S3 Notification Configuration: Unable to validate the following destination configurations` when using using notifications on complete example.
 
 ## [2.3.0] - 2023-09-07
 - feat: Added Lifecycle Configuration which fixes checkov alert `CKV2_AWS_62`

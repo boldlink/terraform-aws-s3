@@ -1,3 +1,37 @@
+module "s3_notification_lambda" {
+  source                        = "boldlink/lambda/aws"
+  version                       = "1.0.0"
+  function_name                 = local.bucket
+  description                   = "Lambda function for s3 notification"
+  filename                      = "lambda.zip"
+  handler                       = "index.lambda_handler"
+  publish                       = true
+  runtime                       = "python3.9"
+  additional_lambda_permissions = local.additional_lambda_permissions
+  source_code_hash              = data.archive_file.lambda_zip.output_base64sha256
+  tags                          = local.tags
+
+  ## Allow lambda invokation s3
+  lambda_permissions = [
+    {
+      statement_id = "AllowExecutionFromS3Bucket"
+      action       = "lambda:InvokeFunction"
+      principal    = "s3.amazonaws.com"
+      source_arn   = local.s3_arn
+    }
+  ]
+}
+
+#Prevent conflict between s3 notification and lambda permission
+resource "time_sleep" "main" {
+  create_duration = "60s"
+
+  triggers = {
+    # This sets up a proper dependency on the function association
+    lambda_function_arn = module.s3_notification_lambda.arn
+  }
+}
+
 resource "random_string" "bucket" {
   length  = 5
   special = false
@@ -23,6 +57,14 @@ module "complete" {
   eventbridge            = true
   versioning_status      = "Enabled"
   tags                   = local.tags
+
+  lambda_function = [
+    {
+      lambda_function_arn = time_sleep.main.triggers["lambda_function_arn"]
+      events              = ["s3:ObjectCreated:*"]
+      filter_prefix       = "AWSLogs/"
+    }
+  ]
 
   s3_logging = {
     target_bucket = module.s3_logging.id

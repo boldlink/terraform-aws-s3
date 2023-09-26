@@ -36,3 +36,9 @@ data "aws_iam_policy_document" "s3" {
     }
   }
 }
+
+data "archive_file" "lambda_zip" {
+  type        = "zip"
+  source_dir  = "./lambdazip"
+  output_path = "lambda.zip"
+}
