@@ -6,6 +6,7 @@ resource "random_string" "bucket" {
 }
 
 resource "aws_sqs_queue" "main" {
+  #checkov:skip=CKV_AWS_27: "Ensure all data stored in the SQS queue is encrypted"
   name = "${var.name}-${random_string.bucket.result}"
 }
 

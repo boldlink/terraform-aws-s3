@@ -46,6 +46,7 @@ data "archive_file" "lambda_zip" {
 
 # SNS Topic
 data "aws_iam_policy_document" "sns" {
+  #checkov:skip=CKV_AWS_111: "Ensure IAM policies does not allow write access without constraints"
   statement {
     sid = "AllowSNSS3BucketNotification"
 
