@@ -42,3 +42,44 @@ data "archive_file" "lambda_zip" {
   source_dir  = "./lambdazip"
   output_path = "lambda.zip"
 }
+
+
+# SNS Topic
+data "aws_iam_policy_document" "sns" {
+  statement {
+    sid = "AllowSNSS3BucketNotification"
+
+    effect = "Allow"
+
+    actions = [
+      "sns:Publish",
+    ]
+
+    principals {
+      type        = "Service"
+      identifiers = ["s3.amazonaws.com"]
+    }
+
+    resources = ["*"]
+
+    condition {
+      test     = "ArnEquals"
+      variable = "aws:SourceArn"
+      values   = ["arn:${local.partition}:s3:::${local.bucket}"]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "sqs" {
+  statement {
+    effect  = "Allow"
+    actions = ["sqs:SendMessage"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["s3.amazonaws.com"]
+    }
+
+    resources = [aws_sqs_queue.main.arn]
+  }
+}

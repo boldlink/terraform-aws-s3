@@ -1,3 +1,35 @@
+resource "random_string" "bucket" {
+  length  = 5
+  special = false
+  upper   = false
+  numeric = false
+}
+
+resource "aws_sqs_queue" "main" {
+  name = "${var.name}-${random_string.bucket.result}"
+}
+
+resource "aws_sqs_queue_policy" "main" {
+  queue_url = aws_sqs_queue.main.id
+  policy    = data.aws_iam_policy_document.sqs.json
+}
+
+module "first_topic" {
+  source  = "boldlink/sns/aws"
+  version = "1.1.1"
+  name    = "${var.name}-${random_string.bucket.result}-1"
+  policy  = data.aws_iam_policy_document.sns.json
+  tags    = local.tags
+}
+
+module "second_topic" {
+  source  = "boldlink/sns/aws"
+  version = "1.1.1"
+  name    = "${var.name}-${random_string.bucket.result}-2"
+  policy  = data.aws_iam_policy_document.sns.json
+  tags    = local.tags
+}
+
 module "s3_notification_lambda" {
   source                        = "boldlink/lambda/aws"
   version                       = "1.0.0"
@@ -22,21 +54,16 @@ module "s3_notification_lambda" {
   ]
 }
 
-#Prevent conflict between s3 notification and lambda permission
+#Prevent conflict between s3 notification and lambda permission, sns and sqs
 resource "time_sleep" "main" {
   create_duration = "60s"
 
   triggers = {
     # This sets up a proper dependency on the function association
     lambda_function_arn = module.s3_notification_lambda.arn
+    first_topic_arn     = module.first_topic.arn
+    second_topic_arn    = module.second_topic.arn
   }
-}
-
-resource "random_string" "bucket" {
-  length  = 5
-  special = false
-  upper   = false
-  numeric = false
 }
 
 module "kms_key" {
@@ -63,6 +90,26 @@ module "complete" {
       lambda_function_arn = time_sleep.main.triggers["lambda_function_arn"]
       events              = ["s3:ObjectCreated:*"]
       filter_prefix       = "AWSLogs/"
+    }
+  ]
+
+  topic = [
+    {
+      topic_arn     = time_sleep.main.triggers["first_topic_arn"]
+      events        = ["s3:ObjectRemoved:Delete"]
+      filter_prefix = "example/"
+    },
+    {
+      topic_arn = time_sleep.main.triggers["second_topic_arn"]
+      events    = ["s3:ObjectRemoved:DeleteMarkerCreated"]
+    }
+  ]
+
+  queue = [
+    {
+      queue_arn     = aws_sqs_queue.main.arn
+      events        = ["s3:ObjectCreated:Put"]
+      filter_prefix = "example2/"
     }
   ]
 

@@ -12,7 +12,7 @@ locals {
       actions = [
         "s3:GetObject"
       ]
-      resources = ["arn:aws:s3:::*/*"]
+      resources = ["arn:${local.partition}:s3:::*/*"]
     }
   }
 }
