@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.3.1] - 2023-09-26
 - fix: `Error Putting S3 Notification Configuration: Unable to validate the following destination configurations` when using using notifications on complete example.
+- feat: show full module coverage in complete examples for bucket notification feature.
 
 ## [2.3.0] - 2023-09-07
 - feat: Added Lifecycle Configuration which fixes checkov alert `CKV2_AWS_62`
