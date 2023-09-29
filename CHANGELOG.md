@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 - fix: replication configuration showing drift detection when filter is used, even when values are unchanged
 - fix: CKV_AWS_300 #Ensure S3 lifecycle configuration sets period for aborting failed uploads
+- fix: CKV2_AWS_65: #Ensure access control lists for S3 buckets are disabled
 - feat: show notification usage in complete example after fixing the notification error
 - feat: Document on README needed permissions and steps to replicate encrypted bucket objects
 - feat: Acceleration Configuration
