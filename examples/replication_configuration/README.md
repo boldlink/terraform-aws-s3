@@ -27,6 +27,7 @@
 
 | Name | Version |
 |------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.19.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.5.1 |
 
 ## Modules
@@ -44,6 +45,7 @@
 | Name | Type |
 |------|------|
 | [random_string.bucket](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 
 ## Inputs
 

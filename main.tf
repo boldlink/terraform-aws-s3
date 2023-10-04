@@ -182,9 +182,9 @@ resource "aws_s3_bucket_replication_configuration" "main" {
               status = replication_time.value.status
 
               dynamic "time" {
-                for_each = replication_time.value.time
+                for_each = try([replication_time.value.time], [])
                 content {
-                  minutes = time.value.minutes
+                  minutes = try(time.value.minutes, null)
                 }
               }
             }
