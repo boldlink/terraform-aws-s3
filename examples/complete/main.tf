@@ -5,6 +5,68 @@ resource "random_string" "bucket" {
   numeric = false
 }
 
+resource "aws_sqs_queue" "main" {
+  #checkov:skip=CKV_AWS_27: "Ensure all data stored in the SQS queue is encrypted"
+  name = "${var.name}-${random_string.bucket.result}"
+}
+
+resource "aws_sqs_queue_policy" "main" {
+  queue_url = aws_sqs_queue.main.id
+  policy    = data.aws_iam_policy_document.sqs.json
+}
+
+module "first_topic" {
+  source  = "boldlink/sns/aws"
+  version = "1.1.1"
+  name    = "${var.name}-${random_string.bucket.result}-1"
+  policy  = data.aws_iam_policy_document.sns.json
+  tags    = local.tags
+}
+
+module "second_topic" {
+  source  = "boldlink/sns/aws"
+  version = "1.1.1"
+  name    = "${var.name}-${random_string.bucket.result}-2"
+  policy  = data.aws_iam_policy_document.sns.json
+  tags    = local.tags
+}
+
+module "s3_notification_lambda" {
+  source                        = "boldlink/lambda/aws"
+  version                       = "1.0.0"
+  function_name                 = local.bucket
+  description                   = "Lambda function for s3 notification"
+  filename                      = "lambda.zip"
+  handler                       = "index.lambda_handler"
+  publish                       = true
+  runtime                       = "python3.9"
+  additional_lambda_permissions = local.additional_lambda_permissions
+  source_code_hash              = data.archive_file.lambda_zip.output_base64sha256
+  tags                          = local.tags
+
+  ## Allow lambda invokation s3
+  lambda_permissions = [
+    {
+      statement_id = "AllowExecutionFromS3Bucket"
+      action       = "lambda:InvokeFunction"
+      principal    = "s3.amazonaws.com"
+      source_arn   = local.s3_arn
+    }
+  ]
+}
+
+#Prevent conflict between s3 notification and lambda permission, sns and sqs
+resource "time_sleep" "main" {
+  create_duration = "60s"
+
+  triggers = {
+    # This sets up a proper dependency on the function association
+    lambda_function_arn = module.s3_notification_lambda.arn
+    first_topic_arn     = module.first_topic.arn
+    second_topic_arn    = module.second_topic.arn
+  }
+}
+
 module "kms_key" {
   source           = "boldlink/kms/aws"
   version          = "1.1.0"
@@ -23,6 +85,34 @@ module "complete" {
   eventbridge            = true
   versioning_status      = "Enabled"
   tags                   = local.tags
+
+  lambda_function = [
+    {
+      lambda_function_arn = time_sleep.main.triggers["lambda_function_arn"]
+      events              = ["s3:ObjectCreated:*"]
+      filter_prefix       = "AWSLogs/"
+    }
+  ]
+
+  topic = [
+    {
+      topic_arn     = time_sleep.main.triggers["first_topic_arn"]
+      events        = ["s3:ObjectRemoved:Delete"]
+      filter_prefix = "example/"
+    },
+    {
+      topic_arn = time_sleep.main.triggers["second_topic_arn"]
+      events    = ["s3:ObjectRemoved:DeleteMarkerCreated"]
+    }
+  ]
+
+  queue = [
+    {
+      queue_arn     = aws_sqs_queue.main.arn
+      events        = ["s3:ObjectCreated:Put"]
+      filter_prefix = "example2/"
+    }
+  ]
 
   s3_logging = {
     target_bucket = module.s3_logging.id

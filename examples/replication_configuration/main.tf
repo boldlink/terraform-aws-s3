@@ -117,6 +117,48 @@ module "source_bucket" {
             status = "Enabled"
           }
         }
+      },
+      {
+        id     = "example-filter"
+        status = "Enabled"
+
+        delete_marker_replication = {
+          status = "Disabled"
+        }
+
+        destination = {
+          bucket        = module.destination_bucket.arn
+          storage_class = "STANDARD"
+          account       = data.aws_caller_identity.current.account_id
+
+          encryption_configuration = {
+            replica_kms_key_id = module.destination_kms_key.arn
+          }
+
+          access_control_translation = {
+            owner = "Destination"
+          }
+
+          metrics = {
+            status = "Enabled"
+            event_threshold = {
+              minutes = 15
+            }
+          }
+
+          replication_time = {
+            status = "Enabled"
+            time = {
+              minutes = 15
+            }
+          }
+        }
+
+        source_selection_criteria = {
+          sse_kms_encrypted_objects = {
+            status = "Enabled"
+          }
+        }
       }
     ]
   }
