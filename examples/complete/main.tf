@@ -261,3 +261,10 @@ module "s3_logging" {
     random_string.bucket
   ]
 }
+
+module "bucket_with_log_policies" {
+  source                      = "./../../"
+  bucket                      = "logging-policies-${random_string.bucket.result}"
+  force_destroy               = true
+  attach_non_org_trail_policy = true
+}

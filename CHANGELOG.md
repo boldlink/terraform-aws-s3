@@ -22,6 +22,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - feat: S3 Object
 - fix: CKV_TF_1 #"Ensure Terraform module sources use a commit hash"
 
+## [2.4.0] - 2024-01-04
+- feat: Added both organizational and non-organizational cloudtrail bucket policy documents to be attached when condition is met
+- feat: added elb s3 delivery log bucket policy
+- feat: added alb/nlb access log s3 bucket policy
+
 ## [2.3.1] - 2023-09-26
 - fix: `Error Putting S3 Notification Configuration: Unable to validate the following destination configurations` when using using notifications on complete example.
 - feat: show full module coverage in complete examples for bucket notification feature.
@@ -79,8 +84,9 @@ The following features have now been added as stand-alone resources in this rele
 - Initial commit
 - Included most basic/common settings in module
 
-[Unreleased]: https://github.com/boldlink/terraform-aws-s3/compare/2.3.1...HEAD
+[Unreleased]: https://github.com/boldlink/terraform-aws-s3/compare/2.4.0...HEAD
 
+[2.4.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.4.0
 [2.3.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.3.1
 [2.3.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.3.0
 [2.2.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.2.1

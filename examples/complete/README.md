@@ -29,15 +29,16 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_archive"></a> [archive](#provider\_archive) | 2.4.0 |
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.19.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.5.1 |
-| <a name="provider_time"></a> [time](#provider\_time) | 0.9.1 |
+| <a name="provider_archive"></a> [archive](#provider\_archive) | 2.4.1 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.31.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.6.0 |
+| <a name="provider_time"></a> [time](#provider\_time) | 0.10.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_bucket_with_log_policies"></a> [bucket\_with\_log\_policies](#module\_bucket\_with\_log\_policies) | ./../../ | n/a |
 | <a name="module_complete"></a> [complete](#module\_complete) | ../../ | n/a |
 | <a name="module_first_topic"></a> [first\_topic](#module\_first\_topic) | boldlink/sns/aws | 1.1.1 |
 | <a name="module_kms_key"></a> [kms\_key](#module\_kms\_key) | boldlink/kms/aws | 1.1.0 |
@@ -88,4 +89,4 @@ This repository uses third party software:
   * Install with `brew install tflint`
   * Manually use via pre-commit
 
-#### BOLDLink-SIG 2023
+#### BOLDLink-SIG 2024

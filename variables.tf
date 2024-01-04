@@ -11,6 +11,18 @@ variable "bucket_prefix" {
   default     = null
 }
 
+variable "attach_org_cloudtrail_policy" {
+  type        = bool
+  description = "Specify whether to attach policy for organization cloudtrail"
+  default     = false
+}
+
+variable "attach_non_org_trail_policy" {
+  type        = bool
+  description = "Specify whether to attach policy for non organization cloudtrail"
+  default     = false
+}
+
 variable "force_destroy" {
   type        = bool
   description = "(Optional, Default:false) A boolean that indicates all objects (including any locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable."
