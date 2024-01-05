@@ -1,13 +1,7 @@
-variable "source_bucket" {
+variable "name" {
   type        = string
-  description = "The name of the source bucket"
-  default     = "replication-example-src-bucket"
-}
-
-variable "destination_bucket" {
-  type        = string
-  description = "The name of the destination bucket"
-  default     = "replication-example-dest-bucket"
+  description = "The name of the bucket"
+  default     = "organization-trail-bucket"
 }
 
 variable "tags" {
