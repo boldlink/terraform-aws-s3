@@ -12,7 +12,6 @@ variable "tags" {
     "user::CostCenter" = "terraform"
     Department         = "DevOps"
     Project            = "Examples"
-    InstanceScheduler  = true
     Owner              = "Boldlink"
     LayerName          = "cExample"
     LayerId            = "cExample"
