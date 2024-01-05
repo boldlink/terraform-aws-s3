@@ -53,7 +53,7 @@
 |------|-------------|------|---------|:--------:|
 | <a name="input_destination_bucket"></a> [destination\_bucket](#input\_destination\_bucket) | The name of the destination bucket | `string` | `"replication-example-dest-bucket"` | no |
 | <a name="input_source_bucket"></a> [source\_bucket](#input\_source\_bucket) | The name of the source bucket | `string` | `"replication-example-src-bucket"` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to the resources | `map(string)` | <pre>{<br>  "Department": "DevOps",<br>  "Environment": "example",<br>  "InstanceScheduler": true,<br>  "LayerId": "cExample",<br>  "LayerName": "cExample",<br>  "Owner": "Boldlink",<br>  "Project": "Examples",<br>  "user::CostCenter": "terraform"<br>}</pre> | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to the resources | `map(string)` | <pre>{<br>  "Department": "DevOps",<br>  "Environment": "example",<br>  "LayerId": "cExample",<br>  "LayerName": "cExample",<br>  "Owner": "Boldlink",<br>  "Project": "Examples",<br>  "user::CostCenter": "terraform"<br>}</pre> | no |
 
 ## Outputs
 
