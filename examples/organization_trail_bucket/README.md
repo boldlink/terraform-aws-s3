@@ -34,7 +34,7 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_minimum"></a> [minimum](#module\_minimum) | ../../ | n/a |
+| <a name="module_organization_trail_bucket"></a> [organization\_trail\_bucket](#module\_organization\_trail\_bucket) | ../../ | n/a |
 
 ## Resources
 
@@ -46,7 +46,7 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_name"></a> [name](#input\_name) | The name of the bucket | `string` | `"minimum-example-boldlink-bucket"` | no |
+| <a name="input_name"></a> [name](#input\_name) | The name of the bucket | `string` | `"organization-trail-bucket"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to the resources | `map(string)` | <pre>{<br>  "Department": "DevOps",<br>  "Environment": "example",<br>  "InstanceScheduler": true,<br>  "LayerId": "cExample",<br>  "LayerName": "cExample",<br>  "Owner": "Boldlink",<br>  "Project": "Examples",<br>  "user::CostCenter": "terraform"<br>}</pre> | no |
 
 ## Outputs
