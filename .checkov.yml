@@ -11,3 +11,4 @@ skip-check:
 - CKV_TF_1 #Ensure Terraform module sources use a commit hash
 - CKV_AWS_21 #Ensure all data stored in the S3 bucket have versioning enabled
 - CKV2_AWS_65 #Ensure access control lists for S3 buckets are disabled
+- CKV2_AWS_67 #Ensure AWS S3 bucket encrypted with Customer Managed Key (CMK) has regular rotation

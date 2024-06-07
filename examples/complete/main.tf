@@ -43,7 +43,6 @@ module "s3_notification_lambda" {
   additional_lambda_permissions = local.additional_lambda_permissions
   source_code_hash              = data.archive_file.lambda_zip.output_base64sha256
   tags                          = local.tags
-
   ## Allow lambda invokation s3
   lambda_permissions = [
     {
@@ -264,6 +263,7 @@ module "s3_logging" {
 
 module "bucket_with_log_policies" {
   source                      = "./../../"
+  enable_block_public_access  = false
   bucket                      = "logging-policies-${random_string.bucket.result}"
   force_destroy               = true
   attach_non_org_trail_policy = true
