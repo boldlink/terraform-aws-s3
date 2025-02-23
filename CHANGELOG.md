@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.5.1] - 2025-02-23
 - fix: Create/configure aws_s3_bucket_public_access_block.main before the bucket policy to circumvent issues with policies which require policies which use principal `*` or principal AWS = `*`.
+- comment out the replication example as it is broken, possible issue with the configurations or change on the aws provider.
+- fix: lifecycle block bug fixed.
 
 ## [2.5.0] - 2024-06-07
 - feat: Add the option to enable/disable block public access configuration, this is by default disabled.
