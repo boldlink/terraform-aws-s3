@@ -29,10 +29,10 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_archive"></a> [archive](#provider\_archive) | 2.4.2 |
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.53.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.6.2 |
-| <a name="provider_time"></a> [time](#provider\_time) | 0.11.2 |
+| <a name="provider_archive"></a> [archive](#provider\_archive) | 2.7.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.88.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.6.3 |
+| <a name="provider_time"></a> [time](#provider\_time) | 0.12.1 |
 
 ## Modules
 

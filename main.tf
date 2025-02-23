@@ -378,6 +378,5 @@ resource "aws_s3_bucket_lifecycle_configuration" "main" {
       }
     }
   }
-  depends_on = [ aws_s3_bucket_versioning.main ]
+  depends_on = [aws_s3_bucket_versioning.main]
 }
-
