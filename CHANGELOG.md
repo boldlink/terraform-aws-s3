@@ -91,7 +91,8 @@ The following features have now been added as stand-alone resources in this rele
 - Initial commit
 - Included most basic/common settings in module
 
-[Unreleased]: https://github.com/boldlink/terraform-aws-s3/compare/2.5.0...HEAD
+[Unreleased]: https://github.com/boldlink/terraform-aws-s3/compare/2.5.1...HEAD
+[2.5.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.5.0
 [2.5.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.5.0
 [2.4.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.4.0
 [2.3.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.3.1
