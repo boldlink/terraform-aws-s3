@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- fix: replication example is broken, possible issue with the configurations or change on the aws provider
 - fix: replication configuration showing drift detection when filter is used, even when values are unchanged
 - fix: CKV_AWS_300 #Ensure S3 lifecycle configuration sets period for aborting failed uploads
 - fix: CKV2_AWS_65: #Ensure access control lists for S3 buckets are disabled
@@ -23,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - fix: CKV_TF_1 Ensure Terraform module sources use a commit hash
 - fix: CKV2_AWS_67 Ensure AWS S3 bucket encrypted with Customer Managed Key (CMK) has regular rotation
 
+## [2.5.1] - 2025-02-23
+- fix: Create/configure aws_s3_bucket_public_access_block.main before the bucket policy to circumvent issues with policies which require policies which use principal `*` or principal AWS = `*`.
 
 ## [2.5.0] - 2024-06-07
 - feat: Add the option to enable/disable block public access configuration, this is by default disabled.

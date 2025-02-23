@@ -16,6 +16,7 @@ resource "random_string" "bucket" {
 
 module "replication_role" {
   source                = "boldlink/iam-role/aws"
+  version               = "1.1.0"
   name                  = var.source_bucket
   description           = "S3 replication role"
   assume_role_policy    = local.assume_role_policy

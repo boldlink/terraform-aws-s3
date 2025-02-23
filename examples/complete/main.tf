@@ -263,7 +263,6 @@ module "s3_logging" {
 
 module "bucket_with_log_policies" {
   source                      = "./../../"
-  enable_block_public_access  = false
   bucket                      = "logging-policies-${random_string.bucket.result}"
   force_destroy               = true
   attach_non_org_trail_policy = true
