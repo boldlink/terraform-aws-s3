@@ -10,24 +10,24 @@ resource "aws_s3_bucket_policy" "main" {
   bucket = aws_s3_bucket.main.bucket
   policy = data.aws_iam_policy_document.combined.json
   depends_on = [
-    aws_s3_bucket.main
+    aws_s3_bucket.main, aws_s3_bucket_public_access_block.main
   ]
 }
 
 resource "aws_s3_bucket_public_access_block" "main" {
-  count                   = var.enable_block_public_access ? 1 : 0
+  # count                   = var.enable_block_public_access ? 1 : 0
   bucket                  = aws_s3_bucket.main.bucket
   block_public_acls       = var.block_public_acls
   block_public_policy     = var.block_public_policy
   ignore_public_acls      = var.ignore_public_acls
   restrict_public_buckets = var.restrict_public_buckets
+  depends_on              = [aws_s3_bucket.main]
 }
 
 resource "aws_s3_bucket_versioning" "main" {
   bucket                = aws_s3_bucket.main.bucket
   expected_bucket_owner = var.expected_bucket_owner
   mfa                   = var.versioning_mfa
-
   versioning_configuration {
     status     = var.versioning_status
     mfa_delete = var.versioning_mfa_delete
@@ -307,10 +307,8 @@ resource "aws_s3_bucket_notification" "main" {
 resource "aws_s3_bucket_lifecycle_configuration" "main" {
   count  = length(var.lifecycle_configuration) > 0 ? 1 : 0
   bucket = aws_s3_bucket.main.id
-
   dynamic "rule" {
     for_each = var.lifecycle_configuration
-
     content {
       id     = rule.value.id
       status = try(rule.value.status, "Disabled")
@@ -321,7 +319,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "main" {
           days_after_initiation = try(rule.value.abort_incomplete_multipart_upload_days, null)
         }
       }
-
       dynamic "expiration" {
         for_each = try(flatten([rule.value.expiration]), [])
         content {
@@ -330,43 +327,31 @@ resource "aws_s3_bucket_lifecycle_configuration" "main" {
           expired_object_delete_marker = try(expiration.value.expired_object_delete_marker, null)
         }
       }
+      # Consolidated filter block – only one filter block per rule.
+      filter {
+        # If there are multiple filter items, use the "and" block.
+        dynamic "and" {
+          for_each = length(try(flatten([rule.value.filter]), [])) > 1 ? [1] : []
+          content {
+            prefix                   = try(rule.value.filter.and.prefix, rule.value.filter.prefix, "")
+            object_size_greater_than = try(rule.value.filter.and.object_size_greater_than, rule.value.filter.object_size_greater_than, null)
+            object_size_less_than    = try(rule.value.filter.and.object_size_less_than, rule.value.filter.object_size_less_than, null)
+            tags                     = try(rule.value.filter.and.tags, rule.value.filter.tags, [])
+          }
+        }
+        # If exactly one filter item is provided, assign its values directly.
+        prefix                   = length(try(flatten([rule.value.filter]), [])) == 1 ? try(rule.value.filter.prefix, null) : null
+        object_size_greater_than = length(try(flatten([rule.value.filter]), [])) == 1 ? try(rule.value.filter.object_size_greater_than, null) : null
+        object_size_less_than    = length(try(flatten([rule.value.filter]), [])) == 1 ? try(rule.value.filter.object_size_less_than, null) : null
 
-      dynamic "filter" {
-        for_each = [for v in try(flatten([rule.value.filter]), []) : v if max(length(keys(v)), length(try(rule.value.filter.tags, rule.value.filter.tag, []))) == 1]
-        content {
-          prefix                   = try(filter.value.prefix, null)
-          object_size_greater_than = try(filter.value.object_size_greater_than, null)
-          object_size_less_than    = try(filter.value.object_size_less_than, null)
-
-          dynamic "tag" {
-            for_each = try([filter.value.tag], [])
-
-            content {
-              key   = tag.value.key
-              value = tag.value.value
-            }
+        dynamic "tag" {
+          for_each = (length(try(flatten([rule.value.filter]), [])) == 1 && try(rule.value.filter.tag, null) != null ? [rule.value.filter.tag] : [])
+          content {
+            key   = tag.value.key
+            value = tag.value.value
           }
         }
       }
-
-      dynamic "filter" {
-        for_each = length(try(flatten([rule.value.filter]), [])) > 0 ? [] : [true]
-        content {
-        }
-      }
-
-      dynamic "filter" {
-        for_each = [for v in try(flatten([rule.value.filter]), []) : v if max(length(keys(v)), length(try(rule.value.filter.tags, rule.value.filter.tag, []))) > 1]
-        content {
-          and {
-            object_size_greater_than = try(rule.value.filter.and.object_size_greater_than, null)
-            object_size_less_than    = try(rule.value.filter.and.object_size_less_than, null)
-            prefix                   = try(rule.value.filter.and.prefix, "")
-            tags                     = try(rule.value.filter.and.tags, null)
-          }
-        }
-      }
-
       dynamic "noncurrent_version_expiration" {
         for_each = try(flatten([rule.value.noncurrent_version_expiration]), [])
         content {
@@ -383,7 +368,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "main" {
           storage_class             = noncurrent_version_transition.value.storage_class
         }
       }
-
       dynamic "transition" {
         for_each = try(flatten([rule.value.transition]), [])
         content {
@@ -394,7 +378,5 @@ resource "aws_s3_bucket_lifecycle_configuration" "main" {
       }
     }
   }
-
-  # Must have bucket versioning enabled first
   depends_on = [aws_s3_bucket_versioning.main]
 }

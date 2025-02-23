@@ -168,10 +168,3 @@ variable "eventbridge" {
   description = "Whether to enable Amazon EventBridge notifications"
   default     = false
 }
-
-variable "enable_block_public_access" {
-  type        = bool
-  description = "Whether to enable public access block altogether, default is true"
-  default     = true
-
-}
