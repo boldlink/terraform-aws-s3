@@ -102,7 +102,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "main" {
   bucket                = aws_s3_bucket.main.bucket
   expected_bucket_owner = var.expected_bucket_owner
   rule {
-    bucket_key_enabled = var.sse_bucket_key_enabled
+    bucket_key_enabled = var.sse_sse_algorithm == "aws:kms" ? coalesce(var.sse_bucket_key_enabled, true) : null
     apply_server_side_encryption_by_default {
       kms_master_key_id = var.sse_kms_master_key_arn
       sse_algorithm     = var.sse_sse_algorithm

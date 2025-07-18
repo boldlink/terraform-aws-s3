@@ -111,7 +111,7 @@ variable "versioning_mfa_delete" {
 
 variable "sse_bucket_key_enabled" {
   type        = bool
-  description = "(Optional) Whether or not to use Amazon S3 Bucket Keys for SSE-KMS."
+  description = "(Optional) Whether or not to use Amazon S3 Bucket Keys for SSE-KMS. Only applies when sse_sse_algorithm is 'aws:kms'. Defaults to true for KMS encryption to reduce costs."
   default     = null
 }
 
