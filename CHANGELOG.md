@@ -24,6 +24,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - fix: CKV_TF_1 Ensure Terraform module sources use a commit hash
 - fix: CKV2_AWS_67 Ensure AWS S3 bucket encrypted with Customer Managed Key (CMK) has regular rotation
 
+## [2.6.0] - 2025-07-20
+- feat: make encryption bucket key enabled by default when using aws:kms.
+- feat: re-add the replication example, now it is working with the latest aws provider version.
+- fix: region data source name attribute (deprecated) changed to id
+
 ## [2.5.1] - 2025-02-23
 - fix: Create/configure aws_s3_bucket_public_access_block.main before the bucket policy to circumvent issues with policies which require policies which use principal `*` or principal AWS = `*`.
 - comment out the replication example as it is broken, possible issue with the configurations or change on the aws provider.
@@ -93,8 +98,9 @@ The following features have now been added as stand-alone resources in this rele
 - Initial commit
 - Included most basic/common settings in module
 
-[Unreleased]: https://github.com/boldlink/terraform-aws-s3/compare/2.5.1...HEAD
-[2.5.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.5.0
+[Unreleased]: https://github.com/boldlink/terraform-aws-s3/compare/2.6.0...HEAD
+[2.6.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.6.0
+[2.5.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.5.1
 [2.5.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.5.0
 [2.4.0]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.4.0
 [2.3.1]: https://github.com/boldlink/terraform-aws-s3/releases/tag/2.3.1

@@ -27,8 +27,8 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.88.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.6.3 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.53.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.6.2 |
 
 ## Modules
 
@@ -36,7 +36,7 @@
 |------|--------|---------|
 | <a name="module_destination_bucket"></a> [destination\_bucket](#module\_destination\_bucket) | ../../ | n/a |
 | <a name="module_destination_kms_key"></a> [destination\_kms\_key](#module\_destination\_kms\_key) | boldlink/kms/aws | n/a |
-| <a name="module_replication_role"></a> [replication\_role](#module\_replication\_role) | boldlink/iam-role/aws | 1.1.0 |
+| <a name="module_replication_role"></a> [replication\_role](#module\_replication\_role) | boldlink/iam-role/aws | n/a |
 | <a name="module_source_bucket"></a> [source\_bucket](#module\_source\_bucket) | ../../ | n/a |
 | <a name="module_source_kms_key"></a> [source\_kms\_key](#module\_source\_kms\_key) | boldlink/kms/aws | n/a |
 
